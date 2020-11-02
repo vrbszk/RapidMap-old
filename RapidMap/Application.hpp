@@ -1,6 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
+#include "Project.hpp"
+
 class Application
 {
 public:
@@ -14,6 +16,8 @@ public:
 private:
 	//Init modules
 	void initWindow();
+	void initUser();
+	void initAppParams();
 
 	//Subcore modules
 	void updateEvents(); // processing events module
@@ -26,4 +30,9 @@ private:
 
 	sf::RenderWindow* window;
 	sf::Event event;
+
+	std::string username;
+	std::string version;
+
+	Project currProject;
 };

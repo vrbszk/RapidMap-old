@@ -22,8 +22,10 @@ void Application::run()
 
 	isRunning = true;
 
+	initAppParams();
+	initUser();
 	initWindow();
-
+	
 	Log::makeLog("Init finished");
 
 	while (isRunning)
@@ -66,4 +68,14 @@ void Application::initWindow()
 	window = new sf::RenderWindow(sf::VideoMode(700, 500), "RapidMap", sf::Style::Default);
 
 	Log::makeLog("app.initWindow finished");
+}
+
+void Application::initUser()
+{
+	username = "app";
+}
+
+void Application::initAppParams()
+{
+	version = "v0.1";
 }
