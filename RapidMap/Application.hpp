@@ -1,5 +1,5 @@
 #pragma once
-
+#include <SFML/Graphics.hpp>
 
 class Application
 {
@@ -12,6 +12,9 @@ public:
 	void run();
 
 private:
+	//Init modules
+	void initWindow();
+
 	//Subcore modules
 	void updateEvents(); // processing events module
 	void updateEnvironment(); //updating application module
@@ -20,4 +23,7 @@ private:
 
 private:
 	bool isRunning;
+
+	sf::RenderWindow* window;
+	sf::Event event;
 };
