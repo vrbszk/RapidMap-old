@@ -16,16 +16,22 @@ Project::~Project()
 
 void Project::create(const std::string& username, const std::string& v)
 {
+	Log::makeLog("Creating project " + v + "...");
+
 	name = "";
 	creator = username;
 	version = v;
 	time_created = Log::getCurrTimestamp();
 	time_edited = Log::getCurrTimestamp();
 	saved = false;
+
+	Log::makeLog("Project created");
 }
 
 void Project::open(const std::string& filepath)
 {
+	Log::makeLog("Opening an existing project " + filepath);
+
 	path = filepath;
 	std::ifstream file;
 	file.open(path);
@@ -39,6 +45,8 @@ void Project::open(const std::string& filepath)
 	file.close();
 
 	saved = true;
+
+	Log::makeLog("Project opened");
 }
 
 void Project::save()
@@ -59,6 +67,8 @@ void Project::saveCopy(const std::string& filepath)
 
 void Project::saveProject(const std::string& filepath)
 {
+	Log::makeLog("Saving a project to " + filepath);
+
 	std::ofstream file;
 	file.open(filepath);
 	
@@ -71,4 +81,6 @@ void Project::saveProject(const std::string& filepath)
 	file.close();
 
 	saved = true;
+
+	Log::makeLog("Project saved");
 }

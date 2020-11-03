@@ -11,6 +11,7 @@ Application::Application()
 Application::~Application()
 {
 	delete window;
+	delete currProject;
 
 	Log::makeLog("App destroyed");
 }

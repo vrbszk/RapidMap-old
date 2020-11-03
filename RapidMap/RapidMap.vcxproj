@@ -119,15 +119,23 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="load_data_module.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="OSM.cpp" />
+    <ClCompile Include="Project.cpp" />
+    <ClCompile Include="StateMachine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.hpp" />
+    <ClInclude Include="AssetManager.hpp" />
+    <ClInclude Include="Entity.hpp" />
     <ClInclude Include="Log.hpp" />
     <ClInclude Include="OSM.hpp" />
+    <ClInclude Include="Project.hpp" />
+    <ClInclude Include="State.hpp" />
+    <ClInclude Include="StateMachine.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

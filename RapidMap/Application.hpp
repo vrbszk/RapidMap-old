@@ -2,6 +2,8 @@
 #include <SFML/Graphics.hpp>
 
 #include "Project.hpp"
+#include "StateMachine.hpp"
+#include "AssetManager.hpp"
 
 class Application
 {
@@ -34,5 +36,8 @@ private:
 	std::string username;
 	std::string version;
 
-	Project currProject;
+	StateMachine stateMachine;
+	AssetManager assetManager;
+
+	Project* currProject;
 };
