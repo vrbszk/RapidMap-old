@@ -397,8 +397,6 @@ OSM_Data read_from_mrf(std::string path)
 	}
 
 	file.close();
-	
-	//std::cout << std::endl << std::endl << osm_data;
 
 	std::cout << "---End of processing---" << std::endl;
 

@@ -1,5 +1,6 @@
 #include "Application.hpp"
 #include "Log.hpp"
+#include "MainMenuState.hpp"
 
 Application::Application()
 {
@@ -31,6 +32,7 @@ void Application::run()
 
 	while (isRunning)
 	{
+		stateMachine.ProcessStateChanges();
 		update();
 		render();
 	}
@@ -49,17 +51,24 @@ void Application::updateEvents()
 	{
 		if (event.type == sf::Event::Closed)
 			window->close();
+		stateMachine.GetActiveState()->updateEvents(event);
 	}
 }
 
 void Application::updateEnvironment()
 {
 	isRunning = window->isOpen();
+
+	stateMachine.GetActiveState()->updateState(window);
 }
 
 void Application::render()
 {
+	window->clear(sf::Color::White);
 
+	stateMachine.GetActiveState()->render(window);
+
+	window->display();
 }
 
 void Application::initWindow()
@@ -67,6 +76,9 @@ void Application::initWindow()
 	Log::makeLog("app.initWindow started...");
 
 	window = new sf::RenderWindow(sf::VideoMode(700, 500), "RapidMap", sf::Style::Default);
+
+	StatePtr menuState(new MainMenuState());
+	stateMachine.AddState(std::move(menuState));
 
 	Log::makeLog("app.initWindow finished");
 }
