@@ -12,8 +12,12 @@
 #include <stdio.h>
 
 
+#include <Windows.h>
+
+
 #include "Log.hpp"
 
+std::string Log::path = "";
 
 std::string Log::getCurrTimestamp()
 {
@@ -31,7 +35,7 @@ std::string Log::getCurrTimestamp()
 
 void Log::makeLog(std::string text)
 {
-	std::ofstream logFile("log.ini", std::ios::app);
+	std::ofstream logFile(path, std::ios::app);
 	logFile << getCurrTimestamp() << " : " << text << "\n";
 	logFile.close();
 }
@@ -40,7 +44,15 @@ void Log::makeLog(std::string text)
 
 void Log::clearLog()
 {
-	std::ofstream logFile("log.ini");
+	char szFileName[250];
+	GetModuleFileName(NULL, szFileName, 250);
+
+	path = szFileName;
+	auto it = path.find_last_of('\\');
+	path = path.substr(0, it + 1);
+	path += "log.ini";
+
+	std::ofstream logFile(path);
 	logFile << getCurrTimestamp() << " : " << "Starting app..." << "\n";
 	logFile.close();
 }

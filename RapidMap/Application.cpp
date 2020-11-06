@@ -111,6 +111,11 @@ void Application::render()
 	window->clear(sf::Color::White);
 
 	stateMachine.GetActiveState()->render(window);
+	if(currProject)
+	for (auto it : currProject->streetNodes)
+	{
+		window->draw(it.second);
+	}
 
 	window->display();
 }
@@ -241,6 +246,13 @@ void Application::saveProjectCopy()
 	}
 }
 
+void Application::attachOSMData()
+{
+	if(currProject)
+		currProject->attachData(load_map_data());
+	else MessageBox(NULL, "Create a project at first", "No project opened", MB_OK);
+}
+
 void Application::exit()
 {
 	if (currProject)
@@ -263,7 +275,3 @@ void Application::exit()
 	window->close();
 }
 
-void Application::attachOSMData()
-{
-	currProject->attachData(load_map_data());
-}

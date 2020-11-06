@@ -4,6 +4,31 @@
 #include "Log.hpp"
 
 
+
+StreetNode node_to_street(OSM_Element el)
+{
+	StreetNode node;
+	node.osmID = el.id;
+	for (auto it : el.params)
+	{
+		if (it.key == "lon")
+			node.x = it.value;
+		if (it.key == "lat")
+			node.y = it.value;
+	}
+	return node;
+}
+
+void StreetNode::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	sf::CircleShape shape;
+	shape.setFillColor(sf::Color::Black);
+	shape.setRadius(2);
+	shape.setPosition((atof(x.c_str()) - 29) * 1000, (atof(y.c_str()) - 49) * 300);
+	target.draw(shape, states);
+}
+
+
 Project::Project()
 {
 	saved = false;
@@ -93,7 +118,50 @@ void Project::saveProject(const std::string& filepath)
 
 void Project::attachData(OSM_Data data)
 {
+	std::vector<OSM_Element> roads;
 
+	for (auto it : data.elements)
+	{
+		if (it.type != "way")
+			continue;
+
+		for (auto p : it.params)
+		{
+			if (p.key == "highway")
+			{
+				if (p.value == "motorway" || p.value == "trunk" || p.value == "primary" || p.value == "secondary" || p.value == "tertiary" || p.value == "unclassified" || p.value == "residential" || p.value == "motorway_link" || p.value == "trunk_link" || p.value == "primary_link" || p.value == "secondary_link" || p.value == "tertiary_link")
+					roads.push_back(it);
+				break;
+			}
+		}
+	}
+
+	std::vector<std::string> nodeids;
+	for (auto it : roads)
+	{
+		for (auto r : it.members)
+		{
+			if (r.type == "node")
+			{
+				nodeids.push_back(r.id);
+				//std::cout << r.id << std::endl;
+			}
+		}
+	}
+
+	for (auto it : nodeids)
+	{
+		if (streetNodes.find(it) != streetNodes.end())
+			continue;
+
+		for (auto n : data.elements)
+			if (n.type == "node" && n.id == it)
+				streetNodes[it] = node_to_street(n);
+	}
+	for (auto it : streetNodes)
+	{
+		std::cout << it.first << " " << it.second.x << " " << it.second.y << std::endl;
+	}
 }
 
 std::string Project::getName()

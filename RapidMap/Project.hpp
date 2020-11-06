@@ -1,6 +1,22 @@
 #pragma once
 #include <string>
 #include "OSM.hpp"
+#include <SFML/Graphics.hpp>
+
+
+class StreetNode : public sf::Drawable
+{
+public:
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+
+	sf::CircleShape shape2;
+
+	std::string osmID;
+	std::string x;
+	std::string y;
+};
+
+StreetNode node_to_street(OSM_Element el);
 
 class Project
 {
@@ -33,4 +49,7 @@ private:
 	std::string version;
 	std::string time_created;
 	std::string time_edited;
+public:
+
+	std::map<std::string, StreetNode> streetNodes;
 };
