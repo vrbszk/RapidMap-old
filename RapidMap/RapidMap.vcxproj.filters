@@ -77,5 +77,8 @@
     <ClInclude Include="MainMenuState.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="load_data_module.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

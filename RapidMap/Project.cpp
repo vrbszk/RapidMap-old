@@ -18,7 +18,11 @@ void Project::create(const std::string& username, const std::string& v)
 {
 	Log::makeLog("Creating project " + v + "...");
 
-	name = "";
+	path = "";
+
+	fileName = "unknown.rmp";
+
+	name = "Unknown";
 	creator = username;
 	version = v;
 	time_created = Log::getCurrTimestamp();
@@ -31,6 +35,8 @@ void Project::create(const std::string& username, const std::string& v)
 void Project::open(const std::string& filepath)
 {
 	Log::makeLog("Opening an existing project " + filepath);
+
+	
 
 	path = filepath;
 	std::ifstream file;
@@ -84,3 +90,19 @@ void Project::saveProject(const std::string& filepath)
 
 	Log::makeLog("Project saved");
 }
+
+void Project::attachData(OSM_Data data)
+{
+
+}
+
+std::string Project::getName()
+{
+	return name + " - " + fileName + ((saved) ? "*" : "");
+}
+
+std::string Project::getFilePath()
+{
+	return path;
+}
+

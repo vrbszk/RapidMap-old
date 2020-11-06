@@ -249,10 +249,6 @@ OSM_Data parse(std::string path) // parsing from osm XML file to elements
 
 	osm_file.close();
 
-	//std::cout << std::endl << std::endl << osm_data;
-
-	std::cout << "---End of processing---" << std::endl;
-
 	return osm_data;
 }
 
@@ -398,8 +394,6 @@ OSM_Data read_from_mrf(std::string path)
 
 	file.close();
 
-	std::cout << "---End of processing---" << std::endl;
-
 	return osm_data;
 }
 
@@ -438,27 +432,6 @@ void write_to_mrf(std::string path, const OSM_Data& osm_data)
 			if (p.key == "lat") file << p.value << " ";
 			else if (p.key == "lon") file << p.value << std::endl;
 			else file << "PARAM " << p.key << " " << p.value << std::endl;
-		}
-	}
-}
-
-void replace_elements_to_list(OSM_Data* osm_data)
-{
-	for (auto it = osm_data->elements.begin(); it != osm_data->elements.end(); it++)
-	{
-		if (it->type == "node")
-		{
-			OSM_Node node;
-			node.id = it->id;
-			node.lat = it->params[0].value;
-			node.lon = it->params[1].value;
-
-			for (auto p : it->params)
-				node.params.push_back(p);
-
-			osm_data->nodelist[node.id] = node;
-
-			//osm_data.elements.erase(it);
 		}
 	}
 }

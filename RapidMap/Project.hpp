@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "OSM.hpp"
 
 class Project
 {
@@ -12,6 +13,11 @@ public:
 	void save();
 	void saveAs(const std::string& filepath);
 	void saveCopy(const std::string& filepath);
+	void attachData(OSM_Data data);
+
+	std::string getName();
+	std::string getFilePath();
+
 private:
 	void saveProject(const std::string& filepath);
 
@@ -19,6 +25,8 @@ private:
 	std::string path;
 
 	bool saved;
+
+	std::string fileName;
 
 	std::string name;
 	std::string creator;

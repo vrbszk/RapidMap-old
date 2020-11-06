@@ -26,6 +26,16 @@ private:
 	void updateEnvironment(); //updating application module
 	void update(); //updating base
 	void render(); //rendering module
+	void exit();
+
+
+	void createProject();
+	void openProject();
+	void saveProject();
+	void saveProjectAs();
+	void saveProjectCopy();
+	void attachOSMData();
+
 
 private:
 	bool isRunning;
