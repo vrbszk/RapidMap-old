@@ -1,21 +1,49 @@
 #include <fstream>
+#include <cmath>
+#include <iomanip>
 
 #include "Project.hpp"
 #include "Log.hpp"
 
+#define PI 3.14159
 
 
-StreetNode node_to_street(OSM_Element el)
+StreetNode node_to_street(OSM_Element el, OSM_Bounds bounds)
 {
 	StreetNode node;
 	node.osmID = el.id;
+	//shape.setPosition((atof(x.c_str()) - 29) * 1000, (atof(y.c_str()) - 49) * 300);
+	float nlat, nlon;
+	float toplon = stof(bounds.maxlon);
+	float toplat = stof(bounds.maxlat);
+	float lowlon = stof(bounds.minlon);
+	float lowlat = stof(bounds.minlat);
+	float dlon = toplon - lowlon;
+	float dlat = toplat - lowlat;
 	for (auto it : el.params)
 	{
 		if (it.key == "lon")
-			node.x = it.value;
+			nlon = stof(it.value);
 		if (it.key == "lat")
-			node.y = it.value;
+			nlat = stof(it.value);
 	}
+
+	double C = 40075016.686;
+	char zoom = 15;
+	float midlat = toplat - dlat / 2;
+	float midlon = toplon - dlon / 2;
+	float midlatrad = midlat * PI / 180;
+	float s = C * std::cos(midlatrad) / std::pow(2, zoom + 8);
+	float sdeg = 360 * std::cos(midlatrad) / std::pow(2, zoom + 8);
+
+	float templon = nlon - midlon;
+	float templat = midlat - nlat;
+
+	node.pos.x = templon / sdeg;
+	node.pos.y = templat / sdeg;
+
+	std::cout << std::cos(midlatrad) << " " << s << " " << std::setprecision(10) << sdeg << std::endl;
+
 	return node;
 }
 
@@ -24,8 +52,14 @@ void StreetNode::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	sf::CircleShape shape;
 	shape.setFillColor(sf::Color::Black);
 	shape.setRadius(2);
-	shape.setPosition((atof(x.c_str()) - 29) * 1000, (atof(y.c_str()) - 49) * 300);
+	shape.setOrigin(2, 2);
+	shape.setPosition(pos);
 	target.draw(shape, states);
+}
+
+void Street::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	target.draw(path, states);
 }
 
 
@@ -139,14 +173,19 @@ void Project::attachData(OSM_Data data)
 	std::vector<std::string> nodeids;
 	for (auto it : roads)
 	{
+		Street street;
+
+		street.osmID = it.id;
+
 		for (auto r : it.members)
 		{
 			if (r.type == "node")
 			{
 				nodeids.push_back(r.id);
-				//std::cout << r.id << std::endl;
+				street.nodeids.push_back(r.id);
 			}
 		}
+		streets[street.osmID] = street;
 	}
 
 	for (auto it : nodeids)
@@ -156,11 +195,22 @@ void Project::attachData(OSM_Data data)
 
 		for (auto n : data.elements)
 			if (n.type == "node" && n.id == it)
-				streetNodes[it] = node_to_street(n);
+				streetNodes[it] = node_to_street(n, data.bounds);
 	}
+
 	for (auto it : streetNodes)
 	{
-		std::cout << it.first << " " << it.second.x << " " << it.second.y << std::endl;
+		std::cout << it.first << " " << it.second.pos.x << " " << it.second.pos.y << std::endl;
+	}
+
+	for (auto it = streets.begin(); it != streets.end(); it++)
+	{
+		it->second.path = sf::VertexArray(sf::LineStrip, it->second.nodeids.size());
+		for (int i = 0; i < it->second.nodeids.size(); i++)
+		{
+			it->second.path[i].position = streetNodes[it->second.nodeids[i]].pos;
+			it->second.path[i].color = sf::Color::Blue;
+		}
 	}
 }
 

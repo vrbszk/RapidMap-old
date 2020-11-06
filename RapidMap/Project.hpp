@@ -12,11 +12,21 @@ public:
 	sf::CircleShape shape2;
 
 	std::string osmID;
-	std::string x;
-	std::string y;
+	sf::Vector2f pos;
 };
 
-StreetNode node_to_street(OSM_Element el);
+class Street : public sf::Drawable
+{
+public:
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+
+	sf::VertexArray path;
+
+	std::string osmID;
+	std::vector<std::string> nodeids;
+};
+
+StreetNode node_to_street(OSM_Element el, OSM_Bounds bounds);
 
 class Project
 {
@@ -52,4 +62,6 @@ private:
 public:
 
 	std::map<std::string, StreetNode> streetNodes;
+
+	std::map<std::string, Street> streets;
 };

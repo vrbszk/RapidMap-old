@@ -111,10 +111,16 @@ void Application::render()
 	window->clear(sf::Color::White);
 
 	stateMachine.GetActiveState()->render(window);
-	if(currProject)
-	for (auto it : currProject->streetNodes)
+	if (currProject)
 	{
-		window->draw(it.second);
+		for (auto it : currProject->streetNodes)
+		{
+			window->draw(it.second);
+		}
+		for (auto it : currProject->streets)
+		{
+			window->draw(it.second);
+		}
 	}
 
 	window->display();
@@ -129,6 +135,12 @@ void Application::initWindow()
 	Log::makeLog("app.initWindow started...");
 
 	window = new sf::RenderWindow(sf::VideoMode(700, 500), "RapidMap", sf::Style::Default);
+
+	sf::View view;
+	view.setSize(window->getSize().x, window->getSize().y);
+	//view.setCenter(window->getSize().x / 2, window->getSize().y / 2);
+	view.setCenter(0, 0);
+	window->setView(view);
 
 	StatePtr menuState(new MainMenuState());
 	stateMachine.AddState(std::move(menuState));
@@ -248,8 +260,17 @@ void Application::saveProjectCopy()
 
 void Application::attachOSMData()
 {
-	if(currProject)
-		currProject->attachData(load_map_data());
+	if (currProject)
+	{
+		try
+		{
+			currProject->attachData(load_map_data());
+		}
+		catch (...)
+		{
+
+		}
+	}
 	else MessageBox(NULL, "Create a project at first", "No project opened", MB_OK);
 }
 
