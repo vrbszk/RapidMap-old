@@ -95,9 +95,10 @@ void Project::open(const std::string& filepath)
 {
 	Log::makeLog("Opening an existing project " + filepath);
 
-	
+
 
 	path = filepath;
+	fileName = path.substr(path.find_last_of('\\') + 1, path.size());
 	std::ifstream file;
 	file.open(path);
 
@@ -106,6 +107,31 @@ void Project::open(const std::string& filepath)
 	file >> version;
 	file >> time_created;
 	file >> time_edited;
+
+	int nodes;
+	file >> nodes;
+	for (int i = 0; i < nodes; i++)
+	{
+		StreetNode node;
+		file >> node.osmID >> node.pos.x >> node.pos.y;
+		streetNodes[node.osmID] = node;
+	}
+
+	int streetscount;
+	file >> streetscount;
+	for (int i = 0; i < streetscount; i++)
+	{
+		Street street;
+		int nodecount;
+		file >> street.osmID >> nodecount;
+		for (int j = 0; j < nodecount; j++)
+		{
+			std::string nodeid;
+			file >> nodeid;
+			street.nodeids.push_back(nodeid);
+		}
+		streets[street.osmID] = street;
+	}
 
 	file.close();
 
@@ -123,6 +149,7 @@ void Project::saveAs(const std::string& filepath)
 {
 	saveProject(filepath);
 	path = filepath;
+	fileName = path.substr(path.find_last_of('\\') + 1, path.size());
 }
 
 void Project::saveCopy(const std::string& filepath)
@@ -134,6 +161,8 @@ void Project::saveProject(const std::string& filepath)
 {
 	Log::makeLog("Saving a project to " + filepath);
 
+	time_edited = Log::getCurrTimestamp();
+
 	std::ofstream file;
 	file.open(filepath);
 	
@@ -142,6 +171,23 @@ void Project::saveProject(const std::string& filepath)
 	file << version << std::endl;
 	file << time_created << std::endl;
 	file << time_edited << std::endl;
+
+	file << streetNodes.size() << std::endl;
+	for (auto it : streetNodes)
+	{
+		file << it.second.osmID << " " << it.second.pos.x << " " << it.second.pos.y << std::endl;
+	}
+
+	file << streets.size();
+	for (auto it : streets)
+	{
+		file << it.second.osmID << " " << it.second.nodeids.size() << std::endl;
+		for (auto n : it.second.nodeids)
+		{
+			file << n << " ";
+		}
+		file << std::endl;
+	}
 
 	file.close();
 
@@ -216,7 +262,7 @@ void Project::attachData(OSM_Data data)
 
 std::string Project::getName()
 {
-	return name + " - " + fileName + ((saved) ? "*" : "");
+	return name + " - " + fileName + ((saved) ? "" : "*");
 }
 
 std::string Project::getFilePath()

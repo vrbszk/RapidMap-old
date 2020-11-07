@@ -256,14 +256,14 @@ void Application::openProject()
 		}
 	}
 
-	OPENFILENAME ofn = getRapidMapOFN();
-
-	if (GetOpenFileName(&ofn))
+	std::string path = getOpenName();
+	
+	if (path != "")
 	{
-		std::string path = ofn.lpstrFile;
 		delete currProject;
 		currProject = new Project();
 		currProject->open(path);
+		currProject->saveAs(path);
 	}
 }
 
@@ -273,36 +273,24 @@ void Application::saveProject()
 		currProject->save();
 	else
 	{
-		OPENFILENAME ofn = getRapidMapOFN();
-
-		if (GetOpenFileName(&ofn))
-		{
-			std::string path = ofn.lpstrFile;
+		std::string path = getSaveName();
+		if(path != "")
 			currProject->saveAs(path);
-		}
 	}
 }
 
 void Application::saveProjectAs()
 {
-	OPENFILENAME ofn = getRapidMapOFN();
-
-	if (GetSaveFileName(&ofn))
-	{
-		std::string path = ofn.lpstrFile;
+	std::string path = getSaveName();
+	if (path != "")
 		currProject->saveAs(path);
-	}
 }
 
 void Application::saveProjectCopy()
 {
-	OPENFILENAME ofn = getRapidMapOFN();
-
-	if (GetOpenFileName(&ofn))
-	{
-		std::string path = ofn.lpstrFile;
+	std::string path = getSaveName();
+	if (path != "")
 		currProject->saveCopy(path);
-	}
 }
 
 void Application::attachOSMData()
