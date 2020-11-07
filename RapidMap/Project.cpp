@@ -110,6 +110,7 @@ void Project::open(const std::string& filepath)
 
 	int nodes;
 	file >> nodes;
+	std::cout << nodes << std::endl;
 	for (int i = 0; i < nodes; i++)
 	{
 		StreetNode node;
@@ -119,11 +120,13 @@ void Project::open(const std::string& filepath)
 
 	int streetscount;
 	file >> streetscount;
+	std::cout << streetscount << std::endl;
 	for (int i = 0; i < streetscount; i++)
 	{
 		Street street;
 		int nodecount;
 		file >> street.osmID >> nodecount;
+		std::cout << street.osmID << " " << nodecount << std::endl;
 		for (int j = 0; j < nodecount; j++)
 		{
 			std::string nodeid;
@@ -132,6 +135,8 @@ void Project::open(const std::string& filepath)
 		}
 		streets[street.osmID] = street;
 	}
+
+	
 
 	file.close();
 
@@ -178,7 +183,7 @@ void Project::saveProject(const std::string& filepath)
 		file << it.second.osmID << " " << it.second.pos.x << " " << it.second.pos.y << std::endl;
 	}
 
-	file << streets.size();
+	file << streets.size() << std::endl;
 	for (auto it : streets)
 	{
 		file << it.second.osmID << " " << it.second.nodeids.size() << std::endl;
@@ -187,6 +192,16 @@ void Project::saveProject(const std::string& filepath)
 			file << n << " ";
 		}
 		file << std::endl;
+	}
+
+	for (auto it = streets.begin(); it != streets.end(); it++)
+	{
+		it->second.path = sf::VertexArray(sf::LineStrip, it->second.nodeids.size());
+		for (int i = 0; i < it->second.nodeids.size(); i++)
+		{
+			it->second.path[i].position = streetNodes[it->second.nodeids[i]].pos;
+			it->second.path[i].color = sf::Color::Blue;
+		}
 	}
 
 	file.close();
