@@ -57,6 +57,8 @@ void Application::update()
 
 void Application::updateEvents()
 {
+	static sf::Vector2i prevMousePos = sf::Mouse::getPosition(*window);
+
 	while (window->pollEvent(event))
 	{
 		switch (event.type)
@@ -64,10 +66,52 @@ void Application::updateEvents()
 		case sf::Event::Closed:
 			exit();
 			break;
+		case sf::Event::Resized:
+		{
+			sf::View view = window->getView();
+			view.setSize(event.size.width * zoomLevel, event.size.height * zoomLevel);
+			window->setSize(sf::Vector2u(event.size.width, event.size.height));
+			window->setView(view);
+			break;
+		}
+		case sf::Event::MouseMoved:
+		{
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			{
+				sf::View view = window->getView();
+				view.move((prevMousePos.x - event.mouseMove.x) * zoomLevel, (prevMousePos.y - event.mouseMove.y) * zoomLevel);
+				window->setView(view);
+			}
+			prevMousePos.x = event.mouseMove.x;
+			prevMousePos.y = event.mouseMove.y;
+			break;
+		}
+		case sf::Event::MouseWheelScrolled:
+		{
+			if (event.mouseWheelScroll.delta < 0)
+				zoomLevel *= 2;
+			else if (event.mouseWheelScroll.delta > 0)
+				zoomLevel /= 2;
+
+			sf::View view;
+			view.setCenter(window->getView().getCenter());
+			view.setSize(window->getSize().x * zoomLevel, window->getSize().y * zoomLevel);
+			window->setView(view);
+			break;
+		}
 		case sf::Event::KeyPressed:
 		{
 			switch (event.key.code)
 			{
+			case sf::Keyboard::L:
+			{
+				zoomLevel = 1;
+				sf::View view;
+				view.setSize(window->getSize().x, window->getSize().y);
+				view.setCenter(0, 0);
+				window->setView(view);
+				break;
+			}
 			case sf::Keyboard::N:
 				if (event.key.control) createProject();
 				break;
@@ -87,6 +131,8 @@ void Application::updateEvents()
 		}
 		}
 		stateMachine.GetActiveState()->updateEvents(event);
+
+		
 	}
 }
 
@@ -136,9 +182,10 @@ void Application::initWindow()
 
 	window = new sf::RenderWindow(sf::VideoMode(700, 500), "RapidMap", sf::Style::Default);
 
+	zoomLevel = 1;
+
 	sf::View view;
-	view.setSize(window->getSize().x, window->getSize().y);
-	//view.setCenter(window->getSize().x / 2, window->getSize().y / 2);
+	view.setSize(window->getSize().x * zoomLevel, window->getSize().y * zoomLevel);
 	view.setCenter(0, 0);
 	window->setView(view);
 

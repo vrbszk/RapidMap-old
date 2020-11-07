@@ -43,6 +43,8 @@ private:
 	sf::RenderWindow* window;
 	sf::Event event;
 
+	float zoomLevel;
+
 	std::string username;
 	std::string version;
 
