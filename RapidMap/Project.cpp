@@ -62,6 +62,11 @@ void Street::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	target.draw(path, states);
 }
 
+void Railway::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	target.draw(path, states);
+}
+
 
 Project::Project()
 {
@@ -110,33 +115,70 @@ void Project::open(const std::string& filepath)
 
 	int nodes;
 	file >> nodes;
-	std::cout << nodes << std::endl;
+	//std::cout << nodes << std::endl;
 	for (int i = 0; i < nodes; i++)
 	{
 		StreetNode node;
 		file >> node.osmID >> node.pos.x >> node.pos.y;
-		streetNodes[node.osmID] = node;
+		infr.wayNodes[node.osmID] = node;
 	}
 
 	int streetscount;
 	file >> streetscount;
-	std::cout << streetscount << std::endl;
+	//std::cout << streetscount << std::endl;
 	for (int i = 0; i < streetscount; i++)
 	{
 		Street street;
 		int nodecount;
 		file >> street.osmID >> nodecount;
-		std::cout << street.osmID << " " << nodecount << std::endl;
+		//std::cout << street.osmID << " " << nodecount << std::endl;
 		for (int j = 0; j < nodecount; j++)
 		{
 			std::string nodeid;
 			file >> nodeid;
 			street.nodeids.push_back(nodeid);
 		}
-		streets[street.osmID] = street;
+		infr.streetWays[street.osmID] = street;
 	}
 
-	
+	int railcount;
+	file >> railcount;
+	for (int i = 0; i < railcount; i++)
+	{
+		Railway rail;
+		int nodecount;
+		file >> rail.osmID >> rail.railType >> nodecount;
+		for (int j = 0; j < nodecount; j++)
+		{
+			std::string nodeid;
+			file >> nodeid;
+			rail.nodeids.push_back(nodeid);
+		}
+		infr.railWays[rail.osmID] = rail;
+	}
+
+
+
+
+	for (auto it = infr.streetWays.begin(); it != infr.streetWays.end(); it++)
+	{
+		it->second.path = sf::VertexArray(sf::LineStrip, it->second.nodeids.size());
+		for (int i = 0; i < it->second.nodeids.size(); i++)
+		{
+			it->second.path[i].position = infr.wayNodes[it->second.nodeids[i]].pos;
+			it->second.path[i].color = sf::Color::Blue;
+		}
+	}
+
+	for (auto it = infr.railWays.begin(); it != infr.railWays.end(); it++)
+	{
+		it->second.path = sf::VertexArray(sf::LineStrip, it->second.nodeids.size());
+		for (int i = 0; i < it->second.nodeids.size(); i++)
+		{
+			it->second.path[i].position = infr.wayNodes[it->second.nodeids[i]].pos;
+			it->second.path[i].color = sf::Color::Red;
+		}
+	}
 
 	file.close();
 
@@ -177,14 +219,14 @@ void Project::saveProject(const std::string& filepath)
 	file << time_created << std::endl;
 	file << time_edited << std::endl;
 
-	file << streetNodes.size() << std::endl;
-	for (auto it : streetNodes)
+	file << infr.wayNodes.size() << std::endl;
+	for (auto it : infr.wayNodes)
 	{
 		file << it.second.osmID << " " << it.second.pos.x << " " << it.second.pos.y << std::endl;
 	}
 
-	file << streets.size() << std::endl;
-	for (auto it : streets)
+	file << infr.streetWays.size() << std::endl;
+	for (auto it : infr.streetWays)
 	{
 		file << it.second.osmID << " " << it.second.nodeids.size() << std::endl;
 		for (auto n : it.second.nodeids)
@@ -194,15 +236,17 @@ void Project::saveProject(const std::string& filepath)
 		file << std::endl;
 	}
 
-	for (auto it = streets.begin(); it != streets.end(); it++)
+	file << infr.railWays.size() << std::endl;
+	for (auto it : infr.railWays)
 	{
-		it->second.path = sf::VertexArray(sf::LineStrip, it->second.nodeids.size());
-		for (int i = 0; i < it->second.nodeids.size(); i++)
+		file << it.second.osmID << " " << it.second.railType << " " << it.second.nodeids.size() << std::endl;
+		for (auto n : it.second.nodeids)
 		{
-			it->second.path[i].position = streetNodes[it->second.nodeids[i]].pos;
-			it->second.path[i].color = sf::Color::Blue;
+			file << n << " ";
 		}
+		file << std::endl;
 	}
+	
 
 	file.close();
 
@@ -214,19 +258,34 @@ void Project::saveProject(const std::string& filepath)
 void Project::attachData(OSM_Data data)
 {
 	std::vector<OSM_Element> roads;
+	std::vector<std::pair<OSM_Element, std::string>> rails;
 
 	for (auto it : data.elements)
 	{
 		if (it.type != "way")
 			continue;
-
+		if(it.type == "way")
 		for (auto p : it.params)
 		{
 			if (p.key == "highway")
 			{
 				if (p.value == "motorway" || p.value == "trunk" || p.value == "primary" || p.value == "secondary" || p.value == "tertiary" || p.value == "unclassified" || p.value == "residential" || p.value == "motorway_link" || p.value == "trunk_link" || p.value == "primary_link" || p.value == "secondary_link" || p.value == "tertiary_link")
+				{ 
 					roads.push_back(it);
-				break;
+					break;
+				}
+					
+			}
+
+			if (p.key == "railway")
+			{
+				if (p.value == "funicular" || p.value == "light_rail" || p.value == "monorail" || p.value == "narrow_gauge" || p.value == "rail" || p.value == "subway" || p.value == "tram")
+				{
+					rails.push_back(std::make_pair(it, p.value));
+					break;
+				}
+
+
 			}
 		}
 	}
@@ -246,31 +305,52 @@ void Project::attachData(OSM_Data data)
 				street.nodeids.push_back(r.id);
 			}
 		}
-		streets[street.osmID] = street;
+		infr.streetWays[street.osmID] = street;
+	}
+
+	for (auto it : rails)
+	{
+		Railway rail;
+		rail.osmID = it.first.id;
+		rail.railType = it.second;
+		for (auto r : it.first.members)
+		{
+			if (r.type == "node")
+			{
+				nodeids.push_back(r.id);
+				rail.nodeids.push_back(r.id);
+			}
+		}
+		infr.railWays[rail.osmID] = rail;
 	}
 
 	for (auto it : nodeids)
 	{
-		if (streetNodes.find(it) != streetNodes.end())
+		if (infr.wayNodes.find(it) != infr.wayNodes.end())
 			continue;
 
 		for (auto n : data.elements)
 			if (n.type == "node" && n.id == it)
-				streetNodes[it] = node_to_street(n, data.bounds);
+				infr.wayNodes[it] = node_to_street(n, data.bounds);
 	}
 
-	for (auto it : streetNodes)
-	{
-		std::cout << it.first << " " << it.second.pos.x << " " << it.second.pos.y << std::endl;
-	}
-
-	for (auto it = streets.begin(); it != streets.end(); it++)
+	for (auto it = infr.streetWays.begin(); it != infr.streetWays.end(); it++)
 	{
 		it->second.path = sf::VertexArray(sf::LineStrip, it->second.nodeids.size());
 		for (int i = 0; i < it->second.nodeids.size(); i++)
 		{
-			it->second.path[i].position = streetNodes[it->second.nodeids[i]].pos;
+			it->second.path[i].position = infr.wayNodes[it->second.nodeids[i]].pos;
 			it->second.path[i].color = sf::Color::Blue;
+		}
+	}
+
+	for (auto it = infr.railWays.begin(); it != infr.railWays.end(); it++)
+	{
+		it->second.path = sf::VertexArray(sf::LineStrip, it->second.nodeids.size());
+		for (int i = 0; i < it->second.nodeids.size(); i++)
+		{
+			it->second.path[i].position = infr.wayNodes[it->second.nodeids[i]].pos;
+			it->second.path[i].color = sf::Color::Red;
 		}
 	}
 }

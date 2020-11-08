@@ -26,6 +26,26 @@ public:
 	std::vector<std::string> nodeids;
 };
 
+class Railway : public sf::Drawable
+{
+public:
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+
+	sf::VertexArray path;
+
+	std::string osmID;
+	std::string railType;
+	std::vector<std::string> nodeids;
+};
+
+class CityInfrastructure
+{
+public:
+	std::map<std::string, StreetNode> wayNodes;
+	std::map<std::string, Street> streetWays;
+	std::map<std::string, Railway> railWays;
+};
+
 StreetNode node_to_street(OSM_Element el, OSM_Bounds bounds);
 
 class Project
@@ -60,8 +80,8 @@ private:
 	std::string time_created;
 	std::string time_edited;
 public:
+	CityInfrastructure infr;
+	//std::map<std::string, StreetNode> streetNodes;
 
-	std::map<std::string, StreetNode> streetNodes;
-
-	std::map<std::string, Street> streets;
+	//std::map<std::string, Street> streets;
 };

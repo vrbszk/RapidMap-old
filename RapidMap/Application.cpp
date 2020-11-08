@@ -159,11 +159,15 @@ void Application::render()
 	stateMachine.GetActiveState()->render(window);
 	if (currProject)
 	{
-		for (auto it : currProject->streetNodes)
+		for (auto it : currProject->infr.wayNodes)
 		{
 			window->draw(it.second);
 		}
-		for (auto it : currProject->streets)
+		for (auto it : currProject->infr.streetWays)
+		{
+			window->draw(it.second);
+		}
+		for (auto it : currProject->infr.railWays)
 		{
 			window->draw(it.second);
 		}
