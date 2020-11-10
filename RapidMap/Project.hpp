@@ -4,15 +4,28 @@
 #include <SFML/Graphics.hpp>
 
 
-class StreetNode : public sf::Drawable
+class StreetNode : public sf::Drawable, public sf::Transformable
 {
 public:
+	StreetNode();
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
-	sf::CircleShape shape2;
+	std::string osmID;
+
+private:
+	sf::CircleShape shape;
+};
+
+class Stop : public sf::Drawable, public sf::Transformable
+{
+public:
+	Stop();
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 	std::string osmID;
-	sf::Vector2f pos;
+
+private:
+	sf::CircleShape shape;
 };
 
 class Street : public sf::Drawable
@@ -41,12 +54,14 @@ public:
 class CityInfrastructure
 {
 public:
+	std::map<std::string, Stop> stopNodes;
 	std::map<std::string, StreetNode> wayNodes;
 	std::map<std::string, Street> streetWays;
 	std::map<std::string, Railway> railWays;
 };
 
 StreetNode node_to_street(OSM_Element el, OSM_Bounds bounds);
+Stop node_to_stop(OSM_Element el, OSM_Bounds bounds);
 
 class Project
 {

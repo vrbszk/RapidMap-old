@@ -37,6 +37,7 @@ void Log::makeLog(std::string text)
 {
 	std::ofstream logFile(path, std::ios::app);
 	logFile << getCurrTimestamp() << " : " << text << "\n";
+	std::cout << getCurrTimestamp() << " : " << text << "\n";
 	logFile.close();
 }
 

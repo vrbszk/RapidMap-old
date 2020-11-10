@@ -159,6 +159,10 @@ void Application::render()
 	stateMachine.GetActiveState()->render(window);
 	if (currProject)
 	{
+		for (auto it : currProject->infr.stopNodes)
+		{
+			window->draw(it.second);
+		}
 		for (auto it : currProject->infr.wayNodes)
 		{
 			window->draw(it.second);
@@ -203,14 +207,22 @@ void Application::initWindow()
 
 void Application::initUser()
 {
+	Log::makeLog("app.initUser started...");
+
 	username = "app";
+
+	Log::makeLog("app.initUser finished");
 }
 
 
 
 void Application::initAppParams()
 {
+	Log::makeLog("app.initAppParams started...");
+
 	version = "v0.1";
+
+	Log::makeLog("app.initAppParams finished");
 }
 
 
@@ -267,7 +279,7 @@ void Application::openProject()
 		delete currProject;
 		currProject = new Project();
 		currProject->open(path);
-		currProject->saveAs(path);
+		//currProject->saveAs(path);
 	}
 }
 

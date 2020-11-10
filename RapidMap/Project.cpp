@@ -12,12 +12,11 @@ StreetNode node_to_street(OSM_Element el, OSM_Bounds bounds)
 {
 	StreetNode node;
 	node.osmID = el.id;
-	//shape.setPosition((atof(x.c_str()) - 29) * 1000, (atof(y.c_str()) - 49) * 300);
 	float nlat, nlon;
-	float toplon = stof(bounds.maxlon);
-	float toplat = stof(bounds.maxlat);
-	float lowlon = stof(bounds.minlon);
-	float lowlat = stof(bounds.minlat);
+	static float toplon = stof(bounds.maxlon);
+	static float toplat = stof(bounds.maxlat);
+	static float lowlon = stof(bounds.minlon);
+	static float lowlat = stof(bounds.minlat);
 	float dlon = toplon - lowlon;
 	float dlat = toplat - lowlat;
 	for (auto it : el.params)
@@ -28,8 +27,8 @@ StreetNode node_to_street(OSM_Element el, OSM_Bounds bounds)
 			nlat = stof(it.value);
 	}
 
-	double C = 40075016.686;
-	char zoom = 15;
+	static double C = 40075016.686;
+	static char zoom = 15;
 	float midlat = toplat - dlat / 2;
 	float midlon = toplon - dlon / 2;
 	float midlatrad = midlat * PI / 180;
@@ -39,21 +38,79 @@ StreetNode node_to_street(OSM_Element el, OSM_Bounds bounds)
 	float templon = nlon - midlon;
 	float templat = midlat - nlat;
 
-	node.pos.x = templon / sdeg;
-	node.pos.y = templat / sdeg;
+	sf::Vector2f pos;
 
-	std::cout << std::cos(midlatrad) << " " << s << " " << std::setprecision(10) << sdeg << std::endl;
+	pos.x = templon / sdeg;
+	pos.y = templat / sdeg;
+
+	node.setPosition(pos);
 
 	return node;
 }
 
-void StreetNode::draw(sf::RenderTarget& target, sf::RenderStates states) const
+Stop node_to_stop(OSM_Element el, OSM_Bounds bounds)
 {
-	sf::CircleShape shape;
+	Stop node;
+	node.osmID = el.id;
+	float nlat, nlon;
+	static float toplon = stof(bounds.maxlon);
+	static float toplat = stof(bounds.maxlat);
+	static float lowlon = stof(bounds.minlon);
+	static float lowlat = stof(bounds.minlat);
+	float dlon = toplon - lowlon;
+	float dlat = toplat - lowlat;
+	for (auto it : el.params)
+	{
+		if (it.key == "lon")
+			nlon = stof(it.value);
+		if (it.key == "lat")
+			nlat = stof(it.value);
+	}
+
+	static double C = 40075016.686;
+	static char zoom = 15;
+	float midlat = toplat - dlat / 2;
+	float midlon = toplon - dlon / 2;
+	float midlatrad = midlat * PI / 180;
+	float s = C * std::cos(midlatrad) / std::pow(2, zoom + 8);
+	float sdeg = 360 * std::cos(midlatrad) / std::pow(2, zoom + 8);
+
+	float templon = nlon - midlon;
+	float templat = midlat - nlat;
+
+	sf::Vector2f pos;
+
+	pos.x = templon / sdeg;
+	pos.y = templat / sdeg;
+
+	node.setPosition(pos);
+
+	return node;
+}
+
+Stop::Stop()
+{
+	shape.setFillColor(sf::Color::Green);
+	shape.setRadius(5);
+	shape.setOrigin(5, 5);
+}
+
+StreetNode::StreetNode()
+{
 	shape.setFillColor(sf::Color::Black);
 	shape.setRadius(2);
 	shape.setOrigin(2, 2);
-	shape.setPosition(pos);
+}
+
+void Stop::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	states.transform *= this->getTransform();
+	target.draw(shape, states);
+}
+
+void StreetNode::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	states.transform *= this->getTransform();
 	target.draw(shape, states);
 }
 
@@ -115,23 +172,22 @@ void Project::open(const std::string& filepath)
 
 	int nodes;
 	file >> nodes;
-	//std::cout << nodes << std::endl;
 	for (int i = 0; i < nodes; i++)
 	{
 		StreetNode node;
-		file >> node.osmID >> node.pos.x >> node.pos.y;
+		sf::Vector2f p;
+		file >> node.osmID >> p.x >> p.y;
+		node.setPosition(p);
 		infr.wayNodes[node.osmID] = node;
 	}
 
 	int streetscount;
 	file >> streetscount;
-	//std::cout << streetscount << std::endl;
 	for (int i = 0; i < streetscount; i++)
 	{
 		Street street;
 		int nodecount;
 		file >> street.osmID >> nodecount;
-		//std::cout << street.osmID << " " << nodecount << std::endl;
 		for (int j = 0; j < nodecount; j++)
 		{
 			std::string nodeid;
@@ -157,7 +213,16 @@ void Project::open(const std::string& filepath)
 		infr.railWays[rail.osmID] = rail;
 	}
 
-
+	int stopscount;
+	file >> stopscount;
+	for (int i = 0; i < stopscount; i++)
+	{
+		Stop stop;
+		sf::Vector2f p;
+		file >> stop.osmID >> p.x >> p.y;
+		stop.setPosition(p);
+		infr.stopNodes[stop.osmID] = stop;
+	}
 
 
 	for (auto it = infr.streetWays.begin(); it != infr.streetWays.end(); it++)
@@ -165,7 +230,7 @@ void Project::open(const std::string& filepath)
 		it->second.path = sf::VertexArray(sf::LineStrip, it->second.nodeids.size());
 		for (int i = 0; i < it->second.nodeids.size(); i++)
 		{
-			it->second.path[i].position = infr.wayNodes[it->second.nodeids[i]].pos;
+			it->second.path[i].position = infr.wayNodes[it->second.nodeids[i]].getPosition();
 			it->second.path[i].color = sf::Color::Blue;
 		}
 	}
@@ -175,7 +240,7 @@ void Project::open(const std::string& filepath)
 		it->second.path = sf::VertexArray(sf::LineStrip, it->second.nodeids.size());
 		for (int i = 0; i < it->second.nodeids.size(); i++)
 		{
-			it->second.path[i].position = infr.wayNodes[it->second.nodeids[i]].pos;
+			it->second.path[i].position = infr.wayNodes[it->second.nodeids[i]].getPosition();
 			it->second.path[i].color = sf::Color::Red;
 		}
 	}
@@ -222,7 +287,7 @@ void Project::saveProject(const std::string& filepath)
 	file << infr.wayNodes.size() << std::endl;
 	for (auto it : infr.wayNodes)
 	{
-		file << it.second.osmID << " " << it.second.pos.x << " " << it.second.pos.y << std::endl;
+		file << it.second.osmID << " " << it.second.getPosition().x << " " << it.second.getPosition().y << std::endl;
 	}
 
 	file << infr.streetWays.size() << std::endl;
@@ -246,6 +311,12 @@ void Project::saveProject(const std::string& filepath)
 		}
 		file << std::endl;
 	}
+
+	file << infr.stopNodes.size() << std::endl;
+	for (auto it : infr.stopNodes)
+	{
+		file << it.second.osmID << " " << it.second.getPosition().x << " " << it.second.getPosition().y << std::endl;
+	}
 	
 
 	file.close();
@@ -257,13 +328,30 @@ void Project::saveProject(const std::string& filepath)
 
 void Project::attachData(OSM_Data data)
 {
+	std::vector<OSM_Element> stops;
 	std::vector<OSM_Element> roads;
 	std::vector<std::pair<OSM_Element, std::string>> rails;
 
 	for (auto it : data.elements)
 	{
-		if (it.type != "way")
-			continue;
+		//if (it.type != "way")
+		//	continue;
+
+		if (it.type == "node")
+		{
+			for (auto p : it.params)
+			{
+				if (p.key == "highway" && p.value == "bus_stop")
+					stops.push_back(it);
+
+				else if (p.key == "public_transport")
+				{
+					if (p.value == "platform" || p.value == "stop_position")
+						stops.push_back(it);
+				}
+			}
+		}
+
 		if(it.type == "way")
 		for (auto p : it.params)
 		{
@@ -290,6 +378,8 @@ void Project::attachData(OSM_Data data)
 		}
 	}
 
+	Log::makeLog("Element processing finished");
+
 	std::vector<std::string> nodeids;
 	for (auto it : roads)
 	{
@@ -308,6 +398,8 @@ void Project::attachData(OSM_Data data)
 		infr.streetWays[street.osmID] = street;
 	}
 
+	Log::makeLog("roads processed");
+
 	for (auto it : rails)
 	{
 		Railway rail;
@@ -324,6 +416,8 @@ void Project::attachData(OSM_Data data)
 		infr.railWays[rail.osmID] = rail;
 	}
 
+	Log::makeLog("rails processed");
+
 	for (auto it : nodeids)
 	{
 		if (infr.wayNodes.find(it) != infr.wayNodes.end())
@@ -331,15 +425,27 @@ void Project::attachData(OSM_Data data)
 
 		for (auto n : data.elements)
 			if (n.type == "node" && n.id == it)
+			{
 				infr.wayNodes[it] = node_to_street(n, data.bounds);
+				break;
+			}
 	}
+
+	Log::makeLog("nodes processed");
+
+	for (auto it : stops)
+	{
+		infr.stopNodes[it.id] = node_to_stop(it, data.bounds);
+	}
+
+	Log::makeLog("stops processed");
 
 	for (auto it = infr.streetWays.begin(); it != infr.streetWays.end(); it++)
 	{
 		it->second.path = sf::VertexArray(sf::LineStrip, it->second.nodeids.size());
 		for (int i = 0; i < it->second.nodeids.size(); i++)
 		{
-			it->second.path[i].position = infr.wayNodes[it->second.nodeids[i]].pos;
+			it->second.path[i].position = infr.wayNodes[it->second.nodeids[i]].getPosition();
 			it->second.path[i].color = sf::Color::Blue;
 		}
 	}
@@ -349,10 +455,19 @@ void Project::attachData(OSM_Data data)
 		it->second.path = sf::VertexArray(sf::LineStrip, it->second.nodeids.size());
 		for (int i = 0; i < it->second.nodeids.size(); i++)
 		{
-			it->second.path[i].position = infr.wayNodes[it->second.nodeids[i]].pos;
+			it->second.path[i].position = infr.wayNodes[it->second.nodeids[i]].getPosition();
 			it->second.path[i].color = sf::Color::Red;
 		}
 	}
+
+	Log::makeLog("pathes created");
+
+	for (auto it : infr.stopNodes)
+	{
+		std::cout << it.first << " " << it.second.osmID << " " << it.second.getPosition().x << " " << it.second.getPosition().y << std::endl;
+	}
+
+	Log::makeLog("Data attached");
 }
 
 std::string Project::getName()
