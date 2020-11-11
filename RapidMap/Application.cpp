@@ -28,11 +28,11 @@ void Application::run()
 {
 	Log::makeLog("App started");
 
-	isRunning = true;
-
 	initAppParams();
 	initUser();
 	initWindow();
+
+	isRunning = true;
 	
 	Log::makeLog("Init finished");
 
@@ -103,6 +103,9 @@ void Application::updateEvents()
 		{
 			switch (event.key.code)
 			{
+			case sf::Keyboard::E:
+				skeletonEnabled = !skeletonEnabled;
+				break;
 			case sf::Keyboard::L:
 			{
 				zoomLevel = 1;
@@ -163,17 +166,20 @@ void Application::render()
 		{
 			window->draw(it.second);
 		}
-		for (auto it : currProject->infr.wayNodes)
+		if (skeletonEnabled)
 		{
-			window->draw(it.second);
-		}
-		for (auto it : currProject->infr.streetWays)
-		{
-			window->draw(it.second);
-		}
-		for (auto it : currProject->infr.railWays)
-		{
-			window->draw(it.second);
+			for (auto it : currProject->infr.wayNodes)
+			{
+				window->draw(it.second);
+			}
+			for (auto it : currProject->infr.streetWays)
+			{
+				window->draw(it.second);
+			}
+			for (auto it : currProject->infr.railWays)
+			{
+				window->draw(it.second);
+			}
 		}
 	}
 
@@ -221,6 +227,8 @@ void Application::initAppParams()
 	Log::makeLog("app.initAppParams started...");
 
 	version = "v0.1";
+
+	skeletonEnabled = true;
 
 	Log::makeLog("app.initAppParams finished");
 }

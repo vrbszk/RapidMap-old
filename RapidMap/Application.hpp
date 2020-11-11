@@ -39,6 +39,7 @@ private:
 
 private:
 	bool isRunning;
+	bool skeletonEnabled;
 
 	sf::RenderWindow* window;
 	sf::Event event;
