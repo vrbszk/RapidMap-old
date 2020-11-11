@@ -328,17 +328,20 @@ void Project::saveProject(const std::string& filepath)
 
 void Project::attachData(OSM_Data data)
 {
+	Log::makeLog("Attaching osm data to project...");
 	std::vector<OSM_Element> stops;
 	std::vector<OSM_Element> roads;
 	std::vector<std::pair<OSM_Element, std::string>> rails;
+	std::map<std::string, OSM_Element> nodeBuf;
+	std::map<std::string, OSM_Element> wayBuf;
+	std::map<std::string, OSM_Element> relBuf;
 
 	for (auto it : data.elements)
 	{
-		//if (it.type != "way")
-		//	continue;
 
 		if (it.type == "node")
 		{
+			nodeBuf[it.id] = it;
 			for (auto p : it.params)
 			{
 				if (p.key == "highway" && p.value == "bus_stop")
@@ -352,29 +355,37 @@ void Project::attachData(OSM_Data data)
 			}
 		}
 
-		if(it.type == "way")
-		for (auto p : it.params)
+		if (it.type == "way")
 		{
-			if (p.key == "highway")
+			wayBuf[it.id] = it;
+			for (auto p : it.params)
 			{
-				if (p.value == "motorway" || p.value == "trunk" || p.value == "primary" || p.value == "secondary" || p.value == "tertiary" || p.value == "unclassified" || p.value == "residential" || p.value == "motorway_link" || p.value == "trunk_link" || p.value == "primary_link" || p.value == "secondary_link" || p.value == "tertiary_link")
-				{ 
-					roads.push_back(it);
-					break;
-				}
-					
-			}
-
-			if (p.key == "railway")
-			{
-				if (p.value == "funicular" || p.value == "light_rail" || p.value == "monorail" || p.value == "narrow_gauge" || p.value == "rail" || p.value == "subway" || p.value == "tram")
+				if (p.key == "highway")
 				{
-					rails.push_back(std::make_pair(it, p.value));
-					break;
+					if (p.value == "motorway" || p.value == "trunk" || p.value == "primary" || p.value == "secondary" || p.value == "tertiary" || p.value == "unclassified" || p.value == "residential" || p.value == "motorway_link" || p.value == "trunk_link" || p.value == "primary_link" || p.value == "secondary_link" || p.value == "tertiary_link")
+					{
+						roads.push_back(it);
+						break;
+					}
+
 				}
 
+				if (p.key == "railway")
+				{
+					if (p.value == "funicular" || p.value == "light_rail" || p.value == "monorail" || p.value == "narrow_gauge" || p.value == "rail" || p.value == "subway" || p.value == "tram")
+					{
+						rails.push_back(std::make_pair(it, p.value));
+						break;
+					}
 
+
+				}
 			}
+		}
+
+		if (it.type == "relation")
+		{
+			relBuf[it.id] = it;
 		}
 	}
 
@@ -420,7 +431,7 @@ void Project::attachData(OSM_Data data)
 
 	for (auto it : nodeids)
 	{
-		if (infr.wayNodes.find(it) != infr.wayNodes.end())
+		/*if (infr.wayNodes.find(it) != infr.wayNodes.end())
 			continue;
 
 		for (auto n : data.elements)
@@ -428,7 +439,8 @@ void Project::attachData(OSM_Data data)
 			{
 				infr.wayNodes[it] = node_to_street(n, data.bounds);
 				break;
-			}
+			}*/
+		infr.wayNodes[it] = node_to_street(nodeBuf[it], data.bounds);
 	}
 
 	Log::makeLog("nodes processed");

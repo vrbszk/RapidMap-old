@@ -1,4 +1,5 @@
 #include "load_data_module.hpp"
+#include "Log.hpp"
 
 OPENFILENAME getRapidMapOFN()
 {
@@ -108,10 +109,12 @@ OSM_Data load_map_data()
 		throw 3;
 	}
 
-
+	
 
 
 	std::string path = ofn.lpstrFile;
+
+	Log::makeLog("Reading OSM data from " + path + "...");
 
 	std::string dir = path.substr(0, ofn.nFileOffset);
 	std::string file = path.substr(ofn.nFileOffset, path.size());
@@ -140,6 +143,8 @@ OSM_Data load_map_data()
 		MessageBox(NULL, "Extension is not supported by application", "EOT", MB_OK);
 		throw 3;
 	}
+
+	Log::makeLog("Data reading finished");
 
 	return osm_data;
 }
