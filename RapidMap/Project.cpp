@@ -6,19 +6,58 @@
 #include "Log.hpp"
 
 #define PI 3.14159
+#define EARTH_RADIUS (6378137 / 5)
+
+#define DEG2RAD(a) ((a) / (180 / PI))
+#define RAD2DEG(a) ((a) * (180 / PI))
 
 
-StreetNode node_to_street(OSM_Element el, OSM_Bounds bounds)
+double y2lat_m(double y)
+{
+	return RAD2DEG(2 * std::atan(std::exp(y / EARTH_RADIUS)) - PI / 2);
+}
+
+double x2lon_m(double x)
+{
+	return RAD2DEG(x / EARTH_RADIUS);
+}
+
+double lat2y_m(double lat)
+{
+	return std::log(std::tan(DEG2RAD(lat) / 2 + PI / 4)) * EARTH_RADIUS;
+}
+
+double lon2x_m(double lon)
+{
+	return DEG2RAD(lon) * EARTH_RADIUS;
+}
+
+sf::Vector2f getMidPos(OSM_Bounds bounds)
+{
+	float toplon = stof(bounds.maxlon);
+	float toplat = stof(bounds.maxlat);
+	float lowlon = stof(bounds.minlon);
+	float lowlat = stof(bounds.minlat);
+
+	float dlon = toplon - lowlon;
+	float dlat = toplat - lowlat;
+
+	float midlat = toplat - dlat / 2;
+	float midlon = toplon - dlon / 2;
+
+	sf::Vector2f midPos;
+
+	midPos.x = lon2x_m(midlon);
+	midPos.y = lat2y_m(midlat);
+
+	return midPos;
+}
+
+StreetNode node_to_street(OSM_Element el, sf::Vector2f midPos)
 {
 	StreetNode node;
 	node.osmID = el.id;
 	float nlat, nlon;
-	static float toplon = stof(bounds.maxlon);
-	static float toplat = stof(bounds.maxlat);
-	static float lowlon = stof(bounds.minlon);
-	static float lowlat = stof(bounds.minlat);
-	float dlon = toplon - lowlon;
-	float dlat = toplat - lowlat;
 	for (auto it : el.params)
 	{
 		if (it.key == "lon")
@@ -27,38 +66,26 @@ StreetNode node_to_street(OSM_Element el, OSM_Bounds bounds)
 			nlat = stof(it.value);
 	}
 
-	static double C = 40075016.686;
-	static char zoom = 15;
-	float midlat = toplat - dlat / 2;
-	float midlon = toplon - dlon / 2;
-	float midlatrad = midlat * PI / 180;
-	float s = C * std::cos(midlatrad) / std::pow(2, zoom + 8);
-	float sdeg = 360 * std::cos(midlatrad) / std::pow(2, zoom + 8);
+	sf::Vector2f globalPos;
 
-	float templon = nlon - midlon;
-	float templat = midlat - nlat;
+	globalPos.x = lon2x_m(nlon);
+	globalPos.y = lat2y_m(nlat);
 
 	sf::Vector2f pos;
 
-	pos.x = templon / sdeg;
-	pos.y = templat / sdeg;
+	pos.x = globalPos.x - midPos.x;
+	pos.y = midPos.y - globalPos.y;
 
 	node.setPosition(pos);
 
 	return node;
 }
 
-Stop node_to_stop(OSM_Element el, OSM_Bounds bounds)
+Stop node_to_stop(OSM_Element el, sf::Vector2f midPos)
 {
 	Stop node;
 	node.osmID = el.id;
 	float nlat, nlon;
-	static float toplon = stof(bounds.maxlon);
-	static float toplat = stof(bounds.maxlat);
-	static float lowlon = stof(bounds.minlon);
-	static float lowlat = stof(bounds.minlat);
-	float dlon = toplon - lowlon;
-	float dlat = toplat - lowlat;
 	for (auto it : el.params)
 	{
 		if (it.key == "lon")
@@ -67,21 +94,15 @@ Stop node_to_stop(OSM_Element el, OSM_Bounds bounds)
 			nlat = stof(it.value);
 	}
 
-	static double C = 40075016.686;
-	static char zoom = 15;
-	float midlat = toplat - dlat / 2;
-	float midlon = toplon - dlon / 2;
-	float midlatrad = midlat * PI / 180;
-	float s = C * std::cos(midlatrad) / std::pow(2, zoom + 8);
-	float sdeg = 360 * std::cos(midlatrad) / std::pow(2, zoom + 8);
+	sf::Vector2f globalPos;
 
-	float templon = nlon - midlon;
-	float templat = midlat - nlat;
+	globalPos.x = lon2x_m(nlon);
+	globalPos.y = lat2y_m(nlat);
 
 	sf::Vector2f pos;
 
-	pos.x = templon / sdeg;
-	pos.y = templat / sdeg;
+	pos.x = globalPos.x - midPos.x;
+	pos.y = midPos.y - globalPos.y;
 
 	node.setPosition(pos);
 
@@ -336,6 +357,8 @@ void Project::attachData(OSM_Data data)
 	std::map<std::string, OSM_Element> wayBuf;
 	std::map<std::string, OSM_Element> relBuf;
 
+	sf::Vector2f midPos = getMidPos(data.bounds);
+
 	for (auto it : data.elements)
 	{
 
@@ -440,14 +463,14 @@ void Project::attachData(OSM_Data data)
 				infr.wayNodes[it] = node_to_street(n, data.bounds);
 				break;
 			}*/
-		infr.wayNodes[it] = node_to_street(nodeBuf[it], data.bounds);
+		infr.wayNodes[it] = node_to_street(nodeBuf[it], midPos);
 	}
 
 	Log::makeLog("nodes processed");
 
 	for (auto it : stops)
 	{
-		infr.stopNodes[it.id] = node_to_stop(it, data.bounds);
+		infr.stopNodes[it.id] = node_to_stop(it, midPos);
 	}
 
 	Log::makeLog("stops processed");

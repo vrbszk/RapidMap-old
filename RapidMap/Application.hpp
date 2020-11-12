@@ -40,6 +40,7 @@ private:
 private:
 	bool isRunning;
 	bool skeletonEnabled;
+	bool nodeSkeletonEnabled;
 
 	sf::RenderWindow* window;
 	sf::Event event;

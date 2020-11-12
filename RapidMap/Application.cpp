@@ -117,6 +117,7 @@ void Application::updateEvents()
 			}
 			case sf::Keyboard::N:
 				if (event.key.control) createProject();
+				else nodeSkeletonEnabled = !nodeSkeletonEnabled;
 				break;
 			case sf::Keyboard::O:
 				if (event.key.control) openProject();
@@ -168,9 +169,12 @@ void Application::render()
 		}
 		if (skeletonEnabled)
 		{
-			for (auto it : currProject->infr.wayNodes)
+			if(nodeSkeletonEnabled)
 			{
-				window->draw(it.second);
+				for (auto it : currProject->infr.wayNodes)
+				{
+					window->draw(it.second);
+				}
 			}
 			for (auto it : currProject->infr.streetWays)
 			{
@@ -229,6 +233,7 @@ void Application::initAppParams()
 	version = "v0.1";
 
 	skeletonEnabled = true;
+	nodeSkeletonEnabled = true;
 
 	Log::makeLog("app.initAppParams finished");
 }
@@ -287,7 +292,6 @@ void Application::openProject()
 		delete currProject;
 		currProject = new Project();
 		currProject->open(path);
-		//currProject->saveAs(path);
 	}
 }
 

@@ -60,8 +60,9 @@ public:
 	std::map<std::string, Railway> railWays;
 };
 
-StreetNode node_to_street(OSM_Element el, OSM_Bounds bounds);
-Stop node_to_stop(OSM_Element el, OSM_Bounds bounds);
+StreetNode node_to_street(OSM_Element el, sf::Vector2f midPos);
+Stop node_to_stop(OSM_Element el, sf::Vector2f midPos);
+sf::Vector2f getMidPos(OSM_Bounds bounds);
 
 class Project
 {
