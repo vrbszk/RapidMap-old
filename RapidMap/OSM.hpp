@@ -38,28 +38,6 @@ struct OSM_Bounds // bounds of osm map
 	std::string maxlon;
 };
 
-struct OSM_Node
-{
-	std::string id;
-	std::string lat;
-	std::string lon;
-	std::vector<OSM_Param> params;
-};
-
-struct OSM_Way
-{
-	std::string id;
-	std::vector<OSM_Param> params;
-	std::vector<OSM_Member> members;
-};
-
-struct OSM_Relation
-{
-	std::string id;
-	std::vector<OSM_Param> params;
-	std::vector<OSM_Member> members;
-};
-
 struct OSM_Data // all of osm data written in file
 {
 public:
@@ -71,17 +49,10 @@ public:
 
 	std::vector<OSM_Element> elements;
 
-	std::map<std::string, OSM_Node> nodelist;
-	std::map<std::string, OSM_Way> waylist;
-	std::map<std::string, OSM_Relation> relationlist;
+	void parse(std::string path);
 };
 
 std::ostream& operator<<(std::ostream& c, OSM_Element el);
 std::ostream& operator<<(std::ostream& c, OSM_Data data);
 
 OSM_Data parse(std::string path); // parsing from osm XML file to elements
-
-// working with old CyberCity files:
-OSM_Data read_from_mrf(std::string path);
-void write_to_mrf(std::string path, const OSM_Data& osm_data);
-void replace_elements_to_list(OSM_Data* osm_data);
