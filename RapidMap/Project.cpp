@@ -497,11 +497,6 @@ void Project::attachData(OSM_Data data)
 
 	Log::makeLog("pathes created");
 
-	for (auto it : infr.stopNodes)
-	{
-		std::cout << it.first << " " << it.second.osmID << " " << it.second.getPosition().x << " " << it.second.getPosition().y << std::endl;
-	}
-
 	Log::makeLog("Data attached");
 }
 

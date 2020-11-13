@@ -29,7 +29,6 @@ std::string getSaveName()
 	OPENFILENAME ofn;
 
 	char szFile[100];
-	char szTitle[100];
 
 	ZeroMemory(&ofn, sizeof(ofn));
 	ofn.lStructSize = sizeof(ofn);
@@ -58,7 +57,6 @@ std::string getOpenName()
 	OPENFILENAME ofn;
 
 	char szFile[100];
-	char szTitle[100];
 
 	ZeroMemory(&ofn, sizeof(ofn));
 	ofn.lStructSize = sizeof(ofn);
@@ -96,10 +94,9 @@ OSM_Data load_map_data()
 	ofn.lpstrFile[0] = '\0';
 	ofn.nMaxFile = sizeof(szFile);
 
-	ofn.lpstrFilter = "All\0*.*\0OSM files(*.osm, *.xml)\0*.osm;*.xml\0CyberCity files(*.mrf)\0*.mrf\0";
+	ofn.lpstrFilter = "All\0*.*\0OSM files(*.osm, *.xml)\0*.osm;*.xml\0";
 	ofn.nFilterIndex = 1;
 	ofn.lpstrFileTitle = NULL;
-	//ofn.nMaxFileTitle = sizeof(szTitle);
 	ofn.lpstrInitialDir = NULL;
 	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 
@@ -131,12 +128,7 @@ OSM_Data load_map_data()
 
 	if (extension == "xml" || extension == "osm" || extension == "")
 	{
-		osm_data = parse(path);
-		write_to_mrf(dir + "mp.mrf", osm_data);
-	}
-	else if (extension == "mrf")
-	{
-		osm_data = read_from_mrf(path);
+		osm_data.parse(path);
 	}
 	else
 	{

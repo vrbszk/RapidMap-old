@@ -48,13 +48,11 @@ public:
 	OSM_Bounds bounds;
 
 	std::vector<OSM_Element> elements;
+
+	void parse(std::string path);
 };
 
 std::ostream& operator<<(std::ostream& c, OSM_Element el);
 std::ostream& operator<<(std::ostream& c, OSM_Data data);
 
 OSM_Data parse(std::string path); // parsing from osm XML file to elements
-
-// working with old CyberCity files:
-OSM_Data read_from_mrf(std::string path);
-void write_to_mrf(std::string path, const OSM_Data& osm_data);
