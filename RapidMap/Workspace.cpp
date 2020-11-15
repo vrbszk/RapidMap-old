@@ -48,10 +48,13 @@ void Workspace::updateEvents(sf::Event e)
 	}
 }
 
-void Workspace::updateInterface()
+void Workspace::updateInterface(sf::FloatRect space)
 {
-	view.setSize(window->getSize().x * zoomLevel, window->getSize().y * zoomLevel);
+	//view.setSize(window->getSize().x * zoomLevel, window->getSize().y * zoomLevel);
+	view.setSize(space.width * zoomLevel, space.height * zoomLevel);
 	view.setCenter(viewCenter);
+	view.setViewport(sf::FloatRect(space.left / window->getSize().x, space.top / window->getSize().y,
+		space.width / window->getSize().x, space.height / window->getSize().y)); // space в даному випадку має остаточні розміри, а значить не потрібно прив'язуватися до викривленого view
 }
 
 void Workspace::render()
@@ -65,6 +68,7 @@ void Workspace::render()
 	sf::RectangleShape bound(sf::Vector2f(view.getSize().x - 10 * zoomLevel, view.getSize().y - 10 * zoomLevel));
 	bound.setOutlineThickness(5 * zoomLevel);
 	bound.setOutlineColor(sf::Color::Yellow);
+	bound.setFillColor(sf::Color::Transparent);
 	bound.setOrigin(bound.getSize().x / 2, bound.getSize().y / 2);
 	bound.setPosition(viewCenter);
 	window->draw(bound);

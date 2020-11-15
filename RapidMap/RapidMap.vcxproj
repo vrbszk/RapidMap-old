@@ -126,6 +126,7 @@
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenuState.cpp" />
+    <ClCompile Include="MenuStrip.cpp" />
     <ClCompile Include="OSM.cpp" />
     <ClCompile Include="Project.cpp" />
     <ClCompile Include="StateMachine.cpp" />
@@ -140,6 +141,7 @@
     <ClInclude Include="load_data_module.hpp" />
     <ClInclude Include="Log.hpp" />
     <ClInclude Include="MainMenuState.hpp" />
+    <ClInclude Include="MenuStrip.hpp" />
     <ClInclude Include="OSM.hpp" />
     <ClInclude Include="Project.hpp" />
     <ClInclude Include="State.hpp" />

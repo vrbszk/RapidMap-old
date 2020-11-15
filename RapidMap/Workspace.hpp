@@ -5,13 +5,14 @@
 class Workspace : public Interface
 {
 public:
-	Project* project;
-
 	Workspace();
 
 	void updateEvents(sf::Event e);
-	void updateInterface();
+	void updateInterface(sf::FloatRect space);
 	void render();
+
+public:
+	Project* project;
 
 	bool skeletonEnabled;
 	bool nodeSkeletonEnabled;

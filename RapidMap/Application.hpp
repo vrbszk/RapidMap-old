@@ -6,6 +6,7 @@
 #include "AssetManager.hpp"
 #include "Interface.hpp"
 #include "Workspace.hpp"
+#include "MenuStrip.hpp"
 
 class Application
 {
@@ -54,6 +55,7 @@ private:
 	StateMachine stateMachine;
 	AssetManager assetManager;
 	std::vector<InterfacePtr> interfaces;
+	MenuStrip menuStrip;
 	Workspace workSpace;
 
 

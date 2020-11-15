@@ -101,6 +101,7 @@ void Application::updateEvents()
 		}
 		stateMachine.GetActiveState()->updateEvents(event);
 		workSpace.updateEvents(event);
+		menuStrip.updateEvents(event);
 		
 	}
 }
@@ -117,7 +118,19 @@ void Application::updateEnvironment()
 		window->setTitle(std::string("No project opened") + " / RapidMap " + version + ", user: " + username);
 
 	stateMachine.GetActiveState()->updateState(window);
-	workSpace.updateInterface();
+
+	sf::FloatRect spaceLeft(sf::Vector2f(0, 0), mainView.getSize());
+
+	std::cout << spaceLeft.left << " " << spaceLeft.top << " " << spaceLeft.width << " " << spaceLeft.height << std::endl;
+
+	menuStrip.updateInterface(spaceLeft);
+
+	spaceLeft.top = menuStrip.view.getSize().y;
+	spaceLeft.height = spaceLeft.height - menuStrip.view.getSize().y;
+
+	std::cout << spaceLeft.left << " " << spaceLeft.top << " " << spaceLeft.width << " " << spaceLeft.height << std::endl;
+
+	workSpace.updateInterface(spaceLeft);
 }
 
 
@@ -129,6 +142,8 @@ void Application::render()
 	window->setView(mainView);
 
 	workSpace.render();
+
+	menuStrip.render();
 
 	window->display();
 }
@@ -181,6 +196,9 @@ void Application::initInterfaces()
 	workSpace.view = sf::View(sf::Vector2f(0, 0), sf::Vector2f(300, 300));
 	workSpace.zoomLevel = 1;
 	workSpace.prevMousePos = sf::Mouse::getPosition(*window);
+
+	menuStrip.setWindow(window);
+	//menuStrip.view = sf::View(sf::Vector2f(0, 0), sf::Vector2f(300, 300));
 }
 
 

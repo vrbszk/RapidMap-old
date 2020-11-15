@@ -11,7 +11,7 @@ public:
 	sf::RenderWindow* getWindow();
 
 	virtual void updateEvents(sf::Event e) = 0;
-	virtual void updateInterface() = 0;
+	virtual void updateInterface(sf::FloatRect space) = 0;
 	virtual void render() = 0;
 
 protected:
