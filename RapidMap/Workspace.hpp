@@ -20,5 +20,5 @@ public:
 	sf::Vector2f viewCenter;
 	sf::Vector2i prevMousePos;
 private:
-
+	
 };

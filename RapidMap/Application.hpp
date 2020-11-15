@@ -48,8 +48,6 @@ private:
 	sf::Event event;
 	sf::View mainView;
 
-	//float zoomLevel;
-
 	std::string username;
 	std::string version;
 

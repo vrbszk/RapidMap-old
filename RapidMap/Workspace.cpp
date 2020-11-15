@@ -26,11 +26,8 @@ void Workspace::updateEvents(sf::Event e)
 	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
-			//sf::View view = window->getView();
 			viewCenter.x = viewCenter.x + (prevMousePos.x - e.mouseMove.x) * zoomLevel;
 			viewCenter.y = viewCenter.y + (prevMousePos.y - e.mouseMove.y) * zoomLevel;
-			//view.move((prevMousePos.x - e.mouseMove.x) * zoomLevel, (prevMousePos.y - e.mouseMove.y) * zoomLevel);
-			//window->setView(view);
 		}
 		prevMousePos.x = e.mouseMove.x;
 		prevMousePos.y = e.mouseMove.y;
@@ -41,18 +38,11 @@ void Workspace::updateEvents(sf::Event e)
 		if (e.mouseWheelScroll.delta < 0)
 		{
 			zoomLevel *= 2;
-			//view.zoom(2);
 		}
 		else if (e.mouseWheelScroll.delta > 0)
 		{
 			zoomLevel /= 2;
-			//view.zoom(0.5);
 		}
-
-		//sf::View view;
-		//view.setCenter(window->getView().getCenter());
-		view.setSize(window->getSize().x * zoomLevel, window->getSize().y * zoomLevel);
-		//window->setView(view);
 		break;
 	}
 	}
@@ -71,6 +61,14 @@ void Workspace::render()
 
 	sf::View tempView = window->getView();
 	window->setView(view);
+
+	sf::RectangleShape bound(sf::Vector2f(view.getSize().x - 10 * zoomLevel, view.getSize().y - 10 * zoomLevel));
+	bound.setOutlineThickness(5 * zoomLevel);
+	bound.setOutlineColor(sf::Color::Yellow);
+	bound.setOrigin(bound.getSize().x / 2, bound.getSize().y / 2);
+	bound.setPosition(viewCenter);
+	window->draw(bound);
+
 
 	if (project)
 	{

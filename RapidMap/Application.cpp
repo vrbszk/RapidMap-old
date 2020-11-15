@@ -58,8 +58,6 @@ void Application::update()
 
 void Application::updateEvents()
 {
-	//static sf::Vector2i prevMousePos = sf::Mouse::getPosition(*window);
-
 	while (window->pollEvent(event))
 	{
 		switch (event.type)
@@ -69,61 +67,22 @@ void Application::updateEvents()
 			break;
 		case sf::Event::Resized:
 		{
-			//sf::View view = window->getView();
 			mainView = sf::View(sf::FloatRect(0, 0, event.size.width, event.size.height));
-			//mainView.setSize();
-			//view.setSize(event.size.width * workSpace.zoomLevel, event.size.height * workSpace.zoomLevel);
 			window->setSize(sf::Vector2u(event.size.width, event.size.height));
-			window->setView(mainView);
-			//window->setView(view);
-			//std::cout << window->getDefaultView().getSize().x << " " << window->getDefaultView().getSize().y;
-			//std::cout << window->getDefaultView().getCenter().x << " " << window->getDefaultView().getCenter().y << std::endl;
+			workSpace.prevMousePos = sf::Mouse::getPosition(*window);
 			break;
 		}
-		//case sf::Event::MouseMoved:
-		//{
-		//	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-		//	{
-		//		sf::View view = window->getView();
-		//		view.move((prevMousePos.x - event.mouseMove.x) * zoomLevel, (prevMousePos.y - event.mouseMove.y) * zoomLevel);
-		//		window->setView(view);
-		//	}
-		//	prevMousePos.x = event.mouseMove.x;
-		//	prevMousePos.y = event.mouseMove.y;
-		//	break;
-		//}
-		/*case sf::Event::MouseWheelScrolled:
-		{
-			if (event.mouseWheelScroll.delta < 0)
-				zoomLevel *= 2;
-			else if (event.mouseWheelScroll.delta > 0)
-				zoomLevel /= 2;
-
-			sf::View view;
-			view.setCenter(window->getView().getCenter());
-			view.setSize(window->getSize().x * zoomLevel, window->getSize().y * zoomLevel);
-			window->setView(view);
-			break;
-		}*/
 		case sf::Event::KeyPressed:
 		{
 			switch (event.key.code)
 			{
-			//case sf::Keyboard::E:
-			//	skeletonEnabled = !skeletonEnabled;
-			//	break;
 			case sf::Keyboard::L:
 			{
 				workSpace.zoomLevel = 1;
-				sf::View view;
-				view.setSize(window->getSize().x, window->getSize().y);
-				view.setCenter(0, 0);
-				window->setView(view);
 				break;
 			}
 			case sf::Keyboard::N:
 				if (event.key.control) createProject();
-				//else nodeSkeletonEnabled = !nodeSkeletonEnabled;
 				break;
 			case sf::Keyboard::O:
 				if (event.key.control) openProject();
@@ -165,18 +124,14 @@ void Application::updateEnvironment()
 
 void Application::render()
 {
-
 	window->clear(sf::Color::White);
 
-	//stateMachine.GetActiveState()->render(window);
+	window->setView(mainView);
 
 	workSpace.render();
-	
 
 	window->display();
 }
-
-
 
 
 
@@ -186,10 +141,7 @@ void Application::initWindow()
 
 	window = new sf::RenderWindow(sf::VideoMode(700, 500), "RapidMap", sf::Style::Default);
 
-	//sf::View view;
-	//view.setSize(window->getSize().x * zoomLevel, window->getSize().y * zoomLevel);
-	//view.setCenter(0, 0);
-	//window->setView(view);
+	mainView = window->getDefaultView();
 
 	StatePtr menuState(new MainMenuState());
 	stateMachine.AddState(std::move(menuState));
