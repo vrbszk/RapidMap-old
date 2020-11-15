@@ -4,6 +4,8 @@
 #include "Project.hpp"
 #include "StateMachine.hpp"
 #include "AssetManager.hpp"
+#include "Interface.hpp"
+#include "Workspace.hpp"
 
 class Application
 {
@@ -20,6 +22,7 @@ private:
 	void initWindow();
 	void initUser();
 	void initAppParams();
+	void initInterfaces();
 
 	//Subcore modules
 	void updateEvents(); // processing events module
@@ -39,19 +42,22 @@ private:
 
 private:
 	bool isRunning;
-	bool skeletonEnabled;
-	bool nodeSkeletonEnabled;
+
 
 	sf::RenderWindow* window;
 	sf::Event event;
+	sf::View mainView;
 
-	float zoomLevel;
+	//float zoomLevel;
 
 	std::string username;
 	std::string version;
 
 	StateMachine stateMachine;
 	AssetManager assetManager;
+	std::vector<InterfacePtr> interfaces;
+	Workspace workSpace;
+
 
 	Project* currProject;
 };

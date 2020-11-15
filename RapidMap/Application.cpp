@@ -31,6 +31,7 @@ void Application::run()
 	initAppParams();
 	initUser();
 	initWindow();
+	initInterfaces();
 
 	isRunning = true;
 	
@@ -57,7 +58,7 @@ void Application::update()
 
 void Application::updateEvents()
 {
-	static sf::Vector2i prevMousePos = sf::Mouse::getPosition(*window);
+	//static sf::Vector2i prevMousePos = sf::Mouse::getPosition(*window);
 
 	while (window->pollEvent(event))
 	{
@@ -68,25 +69,30 @@ void Application::updateEvents()
 			break;
 		case sf::Event::Resized:
 		{
-			sf::View view = window->getView();
-			view.setSize(event.size.width * zoomLevel, event.size.height * zoomLevel);
+			//sf::View view = window->getView();
+			mainView = sf::View(sf::FloatRect(0, 0, event.size.width, event.size.height));
+			//mainView.setSize();
+			//view.setSize(event.size.width * workSpace.zoomLevel, event.size.height * workSpace.zoomLevel);
 			window->setSize(sf::Vector2u(event.size.width, event.size.height));
-			window->setView(view);
+			window->setView(mainView);
+			//window->setView(view);
+			//std::cout << window->getDefaultView().getSize().x << " " << window->getDefaultView().getSize().y;
+			//std::cout << window->getDefaultView().getCenter().x << " " << window->getDefaultView().getCenter().y << std::endl;
 			break;
 		}
-		case sf::Event::MouseMoved:
-		{
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-			{
-				sf::View view = window->getView();
-				view.move((prevMousePos.x - event.mouseMove.x) * zoomLevel, (prevMousePos.y - event.mouseMove.y) * zoomLevel);
-				window->setView(view);
-			}
-			prevMousePos.x = event.mouseMove.x;
-			prevMousePos.y = event.mouseMove.y;
-			break;
-		}
-		case sf::Event::MouseWheelScrolled:
+		//case sf::Event::MouseMoved:
+		//{
+		//	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		//	{
+		//		sf::View view = window->getView();
+		//		view.move((prevMousePos.x - event.mouseMove.x) * zoomLevel, (prevMousePos.y - event.mouseMove.y) * zoomLevel);
+		//		window->setView(view);
+		//	}
+		//	prevMousePos.x = event.mouseMove.x;
+		//	prevMousePos.y = event.mouseMove.y;
+		//	break;
+		//}
+		/*case sf::Event::MouseWheelScrolled:
 		{
 			if (event.mouseWheelScroll.delta < 0)
 				zoomLevel *= 2;
@@ -98,17 +104,17 @@ void Application::updateEvents()
 			view.setSize(window->getSize().x * zoomLevel, window->getSize().y * zoomLevel);
 			window->setView(view);
 			break;
-		}
+		}*/
 		case sf::Event::KeyPressed:
 		{
 			switch (event.key.code)
 			{
-			case sf::Keyboard::E:
-				skeletonEnabled = !skeletonEnabled;
-				break;
+			//case sf::Keyboard::E:
+			//	skeletonEnabled = !skeletonEnabled;
+			//	break;
 			case sf::Keyboard::L:
 			{
-				zoomLevel = 1;
+				workSpace.zoomLevel = 1;
 				sf::View view;
 				view.setSize(window->getSize().x, window->getSize().y);
 				view.setCenter(0, 0);
@@ -117,7 +123,7 @@ void Application::updateEvents()
 			}
 			case sf::Keyboard::N:
 				if (event.key.control) createProject();
-				else nodeSkeletonEnabled = !nodeSkeletonEnabled;
+				//else nodeSkeletonEnabled = !nodeSkeletonEnabled;
 				break;
 			case sf::Keyboard::O:
 				if (event.key.control) openProject();
@@ -135,7 +141,7 @@ void Application::updateEvents()
 		}
 		}
 		stateMachine.GetActiveState()->updateEvents(event);
-
+		workSpace.updateEvents(event);
 		
 	}
 }
@@ -152,40 +158,20 @@ void Application::updateEnvironment()
 		window->setTitle(std::string("No project opened") + " / RapidMap " + version + ", user: " + username);
 
 	stateMachine.GetActiveState()->updateState(window);
+	workSpace.updateInterface();
 }
 
 
 
 void Application::render()
 {
+
 	window->clear(sf::Color::White);
 
-	stateMachine.GetActiveState()->render(window);
-	if (currProject)
-	{
-		for (auto it : currProject->infr.stopNodes)
-		{
-			window->draw(it.second);
-		}
-		if (skeletonEnabled)
-		{
-			if(nodeSkeletonEnabled)
-			{
-				for (auto it : currProject->infr.wayNodes)
-				{
-					window->draw(it.second);
-				}
-			}
-			for (auto it : currProject->infr.streetWays)
-			{
-				window->draw(it.second);
-			}
-			for (auto it : currProject->infr.railWays)
-			{
-				window->draw(it.second);
-			}
-		}
-	}
+	//stateMachine.GetActiveState()->render(window);
+
+	workSpace.render();
+	
 
 	window->display();
 }
@@ -200,12 +186,10 @@ void Application::initWindow()
 
 	window = new sf::RenderWindow(sf::VideoMode(700, 500), "RapidMap", sf::Style::Default);
 
-	zoomLevel = 1;
-
-	sf::View view;
-	view.setSize(window->getSize().x * zoomLevel, window->getSize().y * zoomLevel);
-	view.setCenter(0, 0);
-	window->setView(view);
+	//sf::View view;
+	//view.setSize(window->getSize().x * zoomLevel, window->getSize().y * zoomLevel);
+	//view.setCenter(0, 0);
+	//window->setView(view);
 
 	StatePtr menuState(new MainMenuState());
 	stateMachine.AddState(std::move(menuState));
@@ -232,12 +216,20 @@ void Application::initAppParams()
 
 	version = "v0.1";
 
-	skeletonEnabled = true;
-	nodeSkeletonEnabled = true;
-
 	Log::makeLog("app.initAppParams finished");
 }
 
+
+
+void Application::initInterfaces()
+{
+	workSpace.skeletonEnabled = true;
+	workSpace.nodeSkeletonEnabled = true;
+	workSpace.setWindow(window);
+	workSpace.view = sf::View(sf::Vector2f(0, 0), sf::Vector2f(300, 300));
+	workSpace.zoomLevel = 1;
+	workSpace.prevMousePos = sf::Mouse::getPosition(*window);
+}
 
 
 
@@ -264,6 +256,7 @@ void Application::createProject()
 	delete currProject;
 	currProject = new Project();
 	currProject->create(username, version);
+	workSpace.project = currProject;
 }
 
 void Application::openProject()
@@ -292,6 +285,7 @@ void Application::openProject()
 		delete currProject;
 		currProject = new Project();
 		currProject->open(path);
+		workSpace.project = currProject;
 	}
 }
 
