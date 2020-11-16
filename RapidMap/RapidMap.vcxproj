@@ -122,6 +122,7 @@
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Interface.cpp" />
+    <ClCompile Include="InterfaceHolder.cpp" />
     <ClCompile Include="load_data_module.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="main.cpp" />
@@ -139,6 +140,7 @@
     <ClInclude Include="Button.hpp" />
     <ClInclude Include="Entity.hpp" />
     <ClInclude Include="Interface.hpp" />
+    <ClInclude Include="InterfaceHolder.hpp" />
     <ClInclude Include="load_data_module.hpp" />
     <ClInclude Include="Log.hpp" />
     <ClInclude Include="MainMenuState.hpp" />

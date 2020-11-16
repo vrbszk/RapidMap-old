@@ -6,6 +6,7 @@
 class StateBlock : public Interface
 {
 public:
+	StateBlock();
 	void updateEvents(sf::Event e);
 	void updateInterface(sf::FloatRect space);
 	void render();

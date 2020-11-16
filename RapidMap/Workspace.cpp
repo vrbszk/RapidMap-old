@@ -2,7 +2,7 @@
 
 Workspace::Workspace()
 {
-
+	minSize = sf::Vector2f(50, 50);
 }
 
 void Workspace::updateEvents(sf::Event e)
@@ -16,6 +16,11 @@ void Workspace::updateEvents(sf::Event e)
 		case sf::Keyboard::E:
 			skeletonEnabled = !skeletonEnabled;
 			break;
+		case sf::Keyboard::L:
+		{
+			zoomLevel = 1;
+			break;
+		}
 		case sf::Keyboard::N:
 			nodeSkeletonEnabled = !nodeSkeletonEnabled;
 			break;
