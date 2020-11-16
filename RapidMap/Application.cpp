@@ -102,6 +102,7 @@ void Application::updateEvents()
 		stateMachine.GetActiveState()->updateEvents(event);
 		workSpace.updateEvents(event);
 		menuStrip.updateEvents(event);
+		stateBlock.updateEvents(event);
 		
 	}
 }
@@ -121,14 +122,18 @@ void Application::updateEnvironment()
 
 	sf::FloatRect spaceLeft(sf::Vector2f(0, 0), mainView.getSize());
 
-	std::cout << spaceLeft.left << " " << spaceLeft.top << " " << spaceLeft.width << " " << spaceLeft.height << std::endl;
+	sf::FloatRect stripSpace(sf::Vector2f(spaceLeft.left, spaceLeft.top), sf::Vector2f(spaceLeft.width, 20));
 
-	menuStrip.updateInterface(spaceLeft);
+	menuStrip.updateInterface(stripSpace);
 
 	spaceLeft.top = menuStrip.view.getSize().y;
 	spaceLeft.height = spaceLeft.height - menuStrip.view.getSize().y;
 
-	std::cout << spaceLeft.left << " " << spaceLeft.top << " " << spaceLeft.width << " " << spaceLeft.height << std::endl;
+	sf::FloatRect stateSpace(sf::Vector2f(spaceLeft.left + spaceLeft.width - 100, spaceLeft.top), sf::Vector2f(100, spaceLeft.height));
+
+	stateBlock.updateInterface(stateSpace);
+
+	spaceLeft.width = spaceLeft.width - stateBlock.view.getSize().x;
 
 	workSpace.updateInterface(spaceLeft);
 }
@@ -144,6 +149,8 @@ void Application::render()
 	workSpace.render();
 
 	menuStrip.render();
+
+	stateBlock.render();
 
 	window->display();
 }
@@ -193,12 +200,12 @@ void Application::initInterfaces()
 	workSpace.skeletonEnabled = true;
 	workSpace.nodeSkeletonEnabled = true;
 	workSpace.setWindow(window);
-	workSpace.view = sf::View(sf::Vector2f(0, 0), sf::Vector2f(300, 300));
 	workSpace.zoomLevel = 1;
 	workSpace.prevMousePos = sf::Mouse::getPosition(*window);
 
 	menuStrip.setWindow(window);
-	//menuStrip.view = sf::View(sf::Vector2f(0, 0), sf::Vector2f(300, 300));
+	
+	stateBlock.setWindow(window);
 }
 
 

@@ -61,3 +61,8 @@ StatePtr& StateMachine::GetActiveState()
 {
 	return this->states.top();
 }
+
+bool StateMachine::IsEmpty()
+{
+	return this->states.empty();
+}

@@ -50,7 +50,6 @@ void Workspace::updateEvents(sf::Event e)
 
 void Workspace::updateInterface(sf::FloatRect space)
 {
-	//view.setSize(window->getSize().x * zoomLevel, window->getSize().y * zoomLevel);
 	view.setSize(space.width * zoomLevel, space.height * zoomLevel);
 	view.setCenter(viewCenter);
 	view.setViewport(sf::FloatRect(space.left / window->getSize().x, space.top / window->getSize().y,

@@ -7,6 +7,7 @@
 #include "Interface.hpp"
 #include "Workspace.hpp"
 #include "MenuStrip.hpp"
+#include "StateBlock.hpp"
 
 class Application
 {
@@ -57,7 +58,8 @@ private:
 	std::vector<InterfacePtr> interfaces;
 	MenuStrip menuStrip;
 	Workspace workSpace;
-
+	StateBlock stateBlock;
+	
 
 	Project* currProject;
 };

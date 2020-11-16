@@ -15,6 +15,7 @@ public:
 
 	void AddState(StatePtr newState, bool isReplasing = true);
 	void RemoveState();
+	bool IsEmpty();
 
 	void ProcessStateChanges();
 
