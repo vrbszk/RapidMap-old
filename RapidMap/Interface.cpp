@@ -9,8 +9,3 @@ sf::RenderWindow* Interface::getWindow()
 {
 	return window;
 }
-
-sf::Vector2f Interface::getMinSize()
-{
-	return minSize;
-}

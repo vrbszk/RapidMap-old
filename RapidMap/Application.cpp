@@ -17,7 +17,6 @@ Application::~Application()
 {
 	delete window;
 	delete currProject;
-	delete interfaceRoot;
 
 	Log::makeLog("App destroyed");
 }
@@ -68,24 +67,20 @@ void Application::updateEvents()
 			break;
 		case sf::Event::Resized:
 		{
-			sf::Vector2f newSize(event.size.width, event.size.height);
-			if (interfaceRoot)
-			{
-				sf::Vector2f minSize = interfaceRoot->getMinSize();
-				if (newSize.x < minSize.x)
-					newSize.x = minSize.x;
-				if (newSize.y < minSize.y)
-					newSize.y = minSize.y;
-			}
-			mainView = sf::View(sf::FloatRect(sf::Vector2f(0, 0), newSize));
-			window->setSize(sf::Vector2u(newSize));
-			workSpace->prevMousePos = sf::Mouse::getPosition(*window);
+			mainView = sf::View(sf::FloatRect(0, 0, event.size.width, event.size.height));
+			window->setSize(sf::Vector2u(event.size.width, event.size.height));
+			workSpace.prevMousePos = sf::Mouse::getPosition(*window);
 			break;
 		}
 		case sf::Event::KeyPressed:
 		{
 			switch (event.key.code)
 			{
+			case sf::Keyboard::L:
+			{
+				workSpace.zoomLevel = 1;
+				break;
+			}
 			case sf::Keyboard::N:
 				if (event.key.control) createProject();
 				break;
@@ -105,11 +100,9 @@ void Application::updateEvents()
 		}
 		}
 		stateMachine.GetActiveState()->updateEvents(event);
-		if (interfaceRoot)
-			interfaceRoot->updateEvents(event);
-		//workSpace.updateEvents(event);
-		//menuStrip.updateEvents(event);
-		//stateBlock.updateEvents(event);
+		workSpace.updateEvents(event);
+		menuStrip.updateEvents(event);
+		stateBlock.updateEvents(event);
 		
 	}
 }
@@ -127,10 +120,7 @@ void Application::updateEnvironment()
 
 	stateMachine.GetActiveState()->updateState(window);
 
-	if (interfaceRoot)
-		interfaceRoot->updateInterface(sf::FloatRect(sf::Vector2f(0, 0), mainView.getSize()));
-
-	/*sf::FloatRect spaceLeft(sf::Vector2f(0, 0), mainView.getSize());
+	sf::FloatRect spaceLeft(sf::Vector2f(0, 0), mainView.getSize());
 
 	sf::FloatRect stripSpace(sf::Vector2f(spaceLeft.left, spaceLeft.top), sf::Vector2f(spaceLeft.width, 20));
 
@@ -145,7 +135,7 @@ void Application::updateEnvironment()
 
 	spaceLeft.width = spaceLeft.width - stateBlock.view.getSize().x;
 
-	workSpace.updateInterface(spaceLeft);*/
+	workSpace.updateInterface(spaceLeft);
 }
 
 
@@ -156,14 +146,11 @@ void Application::render()
 
 	window->setView(mainView);
 
-	if (interfaceRoot)
-		interfaceRoot->render();
+	workSpace.render();
 
-	//workSpace.render();
+	menuStrip.render();
 
-	//menuStrip.render();
-
-	//stateBlock.render();
+	stateBlock.render();
 
 	window->display();
 }
@@ -210,44 +197,15 @@ void Application::initAppParams()
 
 void Application::initInterfaces()
 {
-	interfaceRoot = new InterfaceHolderNode();
+	workSpace.skeletonEnabled = true;
+	workSpace.nodeSkeletonEnabled = true;
+	workSpace.setWindow(window);
+	workSpace.zoomLevel = 1;
+	workSpace.prevMousePos = sf::Mouse::getPosition(*window);
 
-	InterfaceHolderNode* tempRoot;
-
-	workSpace = new Workspace();
-
-	workSpace->skeletonEnabled = true;
-	workSpace->nodeSkeletonEnabled = true;
-	workSpace->setWindow(window);
-	workSpace->zoomLevel = 1;
-	workSpace->prevMousePos = sf::Mouse::getPosition(*window);
-
-	menuStrip = new MenuStrip();
-
-	menuStrip->setWindow(window);
+	menuStrip.setWindow(window);
 	
-	StateBlock* block = new StateBlock();
-
-	block->setWindow(window);
-
-	interfaceRoot->inth1 = workSpace;
-	interfaceRoot->inth2 = block;
-
-	interfaceRoot->stableNode = 1;
-	interfaceRoot->borderSize = 500;
-	interfaceRoot->borderVertcal = true;
-
-	tempRoot = interfaceRoot;
-
-	interfaceRoot = new InterfaceHolderNode();
-	interfaceRoot->inth1 = menuStrip;
-	interfaceRoot->inth2 = tempRoot;
-
-	interfaceRoot->stableNode = -1;
-	interfaceRoot->borderSize = 20;
-	interfaceRoot->borderVertcal = false;
-
-	interfaceRoot->getMinSize();
+	stateBlock.setWindow(window);
 }
 
 
@@ -275,7 +233,7 @@ void Application::createProject()
 	delete currProject;
 	currProject = new Project();
 	currProject->create(username, version);
-	workSpace->project = currProject;
+	workSpace.project = currProject;
 }
 
 void Application::openProject()
@@ -304,7 +262,7 @@ void Application::openProject()
 		delete currProject;
 		currProject = new Project();
 		currProject->open(path);
-		workSpace->project = currProject;
+		workSpace.project = currProject;
 	}
 }
 

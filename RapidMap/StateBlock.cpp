@@ -1,10 +1,5 @@
 #include "StateBlock.hpp"
 
-StateBlock::StateBlock()
-{
-	minSize = sf::Vector2f(50, 50);
-}
-
 void StateBlock::updateEvents(sf::Event e)
 {
 	if (!stateList.IsEmpty())

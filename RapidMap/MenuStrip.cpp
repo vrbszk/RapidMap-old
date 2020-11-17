@@ -1,10 +1,5 @@
 #include "MenuStrip.hpp"
 
-MenuStrip::MenuStrip()
-{
-	minSize = sf::Vector2f(50, 20);
-}
-
 void MenuStrip::updateEvents(sf::Event e)
 {
 

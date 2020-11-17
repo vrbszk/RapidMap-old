@@ -8,7 +8,6 @@
 #include "Workspace.hpp"
 #include "MenuStrip.hpp"
 #include "StateBlock.hpp"
-#include "InterfaceHolder.hpp"
 
 class Application
 {
@@ -56,11 +55,10 @@ private:
 
 	StateMachine stateMachine;
 	AssetManager assetManager;
-	//std::vector<InterfacePtr> interfaces;
-	InterfaceHolderNode* interfaceRoot;
-	MenuStrip* menuStrip;
-	Workspace* workSpace;
-	//StateBlock stateBlock;
+	std::vector<InterfacePtr> interfaces;
+	MenuStrip menuStrip;
+	Workspace workSpace;
+	StateBlock stateBlock;
 	
 
 	Project* currProject;
