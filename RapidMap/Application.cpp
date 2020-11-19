@@ -29,6 +29,7 @@ void Application::run()
 	Log::makeLog("App started");
 
 	initAppParams();
+	initResources();
 	initUser();
 	initWindow();
 	initInterfaces();
@@ -197,6 +198,8 @@ void Application::initAppParams()
 
 void Application::initInterfaces()
 {
+	Log::makeLog("app.initInterfaces started...");
+
 	workSpace.skeletonEnabled = true;
 	workSpace.nodeSkeletonEnabled = true;
 	workSpace.setWindow(window);
@@ -204,10 +207,24 @@ void Application::initInterfaces()
 	workSpace.prevMousePos = sf::Mouse::getPosition(*window);
 
 	menuStrip.setWindow(window);
+	menuStrip.resources = &assetManager;
+	menuStrip.init();
 	
 	stateBlock.setWindow(window);
+
+	Log::makeLog("app.initInterfaces finished");
 }
 
+
+
+void Application::initResources()
+{
+	Log::makeLog("app.initResources started...");
+
+	assetManager.LoadFont("main", "Fonts/geomid.ttf");
+
+	Log::makeLog("app.initResources finished");
+}
 
 
 

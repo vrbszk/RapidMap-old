@@ -52,7 +52,10 @@ void AssetManager::LoadFont(std::string name, std::string fileName)
 sf::Font& AssetManager::GetFont(std::string name)
 {
 	if (fonts.find(name) == fonts.end())
+	{
 		Log::makeLog("Error:: Failed to get font " + name);
+		throw;
+	}
 
 	return fonts.at(name);
 }

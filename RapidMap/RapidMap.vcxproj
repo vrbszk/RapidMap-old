@@ -131,6 +131,7 @@
     <ClCompile Include="Project.cpp" />
     <ClCompile Include="StateBlock.cpp" />
     <ClCompile Include="StateMachine.cpp" />
+    <ClCompile Include="StripButton.cpp" />
     <ClCompile Include="Workspace.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -148,6 +149,7 @@
     <ClInclude Include="State.hpp" />
     <ClInclude Include="StateBlock.hpp" />
     <ClInclude Include="StateMachine.hpp" />
+    <ClInclude Include="StripButton.hpp" />
     <ClInclude Include="Workspace.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

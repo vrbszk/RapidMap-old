@@ -25,6 +25,7 @@ private:
 	void initUser();
 	void initAppParams();
 	void initInterfaces();
+	void initResources();
 
 	//Subcore modules
 	void updateEvents(); // processing events module
