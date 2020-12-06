@@ -1,26 +1,35 @@
 #include "Console.hpp"
 
 #include <iostream>
+#include <chrono>
 
 Console::Console() : t(&Console::cinThread, this)
 {
-	
+	this->open();
 }
 
 Console::~Console()
 {
 	this->isWorking = false;
+	//try { t.~thread(); }
+	//catch (...) { }
 	t.join();
 }
 
 void Console::open()
 {
 	receivingOpened = true;
+	std::cout << "RapidMap > ";
 }
 
 void Console::close()
 {
 	receivingOpened = false;
+}
+
+bool Console::isOpened()
+{
+	return receivingOpened;
 }
 
 bool Console::pollCommand(std::string& command)
@@ -58,6 +67,9 @@ void Console::cinThread()
 
 void Console::extractCommand(std::string& line)
 {
-	std::cout << "RapidMap > ";
-	std::getline(std::cin, line);
+	if (std::cin.rdbuf()->in_avail())
+	{
+		std::getline(std::cin, line);
+	}
+	else std::this_thread::sleep_for(std::chrono::milliseconds(100));
 }

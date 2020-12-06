@@ -1,8 +1,12 @@
 #pragma once
+
+class ProjectManager;
+
 #include <string>
 #include "OSM.hpp"
 #include <SFML/Graphics.hpp>
-
+#include <memory>
+#include "Application.hpp"
 
 class StreetNode : public sf::Drawable, public sf::Transformable
 {
@@ -101,3 +105,18 @@ public:
 
 	//std::map<std::string, Street> streets;
 };
+
+class ProjectManager
+{
+public:
+	Application* core;
+	std::unique_ptr<Project> currProject;
+
+	void createProject();
+	void openProject();
+	void saveProject();
+	void saveProjectAs();
+	void saveProjectCopy();
+	void attachOSMData();
+};
+

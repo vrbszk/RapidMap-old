@@ -1,13 +1,19 @@
 #include "Application.hpp"
 #include "Log.hpp"
 #include "MainMenuState.hpp"
+#include "Window.hpp"
 #include <Windows.h>
 #include "load_data_module.hpp"
 
+
+
 #include <thread>
 
-Application::Application()
+Application::Application() 
 {
+	projectManager = std::make_shared<ProjectManager>();
+	projectManager->core = this;
+
 	Log::clearLog();
 
 	Log::makeLog("App created");
@@ -18,7 +24,7 @@ Application::Application()
 Application::~Application()
 {
 	delete window;
-	delete currProject;
+	//delete currProject;
 
 	Log::makeLog("App destroyed");
 }
@@ -47,7 +53,7 @@ void Application::run()
 
 	while (isRunning)
 	{
-		stateMachine.ProcessStateChanges();
+		//stateMachine.ProcessStateChanges();
 		update();
 		render();
 	}
@@ -70,53 +76,14 @@ void Application::update()
 
 void Application::updateEvents()
 {
-	while (window->pollEvent(event))
-	{
-		switch (event.type)
-		{
-		case sf::Event::Closed:
-			exit();
-			break;
-		case sf::Event::Resized:
-		{
-			mainView = sf::View(sf::FloatRect(0, 0, event.size.width, event.size.height));
-			window->setSize(sf::Vector2u(event.size.width, event.size.height));
-			workSpace.prevMousePos = sf::Mouse::getPosition(*window);
-			break;
-		}
-		case sf::Event::KeyPressed:
-		{
-			switch (event.key.code)
-			{
-			case sf::Keyboard::L:
-			{
-				workSpace.zoomLevel = 1;
-				break;
-			}
-			case sf::Keyboard::N:
-				if (event.key.control) createProject();
-				break;
-			case sf::Keyboard::O:
-				if (event.key.control) openProject();
-				break;
-			case sf::Keyboard::S:
-				if (event.key.control && !event.key.alt) saveProject();
-				else if (event.key.control && event.key.alt) saveProjectAs();
-				else if (!event.key.control && event.key.alt) saveProjectCopy();
-				break;
-			case sf::Keyboard::T:
-				if (event.key.control) attachOSMData();
-				break;
-			}
-			break;
-		}
-		}
-		stateMachine.GetActiveState()->updateEvents(event);
-		workSpace.updateEvents(event);
-		menuStrip.updateEvents(event);
-		stateBlock.updateEvents(event);
-		
-	}
+	window->updateEvents();
+	//while (window->pollEvent(event))
+	//{
+	//	
+	//	}
+	//	//stateMachine.GetActiveState()->updateEvents(event);
+	//	
+	//}
 }
 
 
@@ -127,7 +94,8 @@ void Application::updateCommands()
 	{
 		std::cout << "New command extracted: " << command << std::endl;
 	}
-	console.open();
+	if(!console.isOpened())
+		console.open();
 }
 
 
@@ -135,46 +103,33 @@ void Application::updateEnvironment()
 {
 	isRunning = window->isOpen();
 
-	if (currProject)
-		window->setTitle(currProject->getName() + " / RapidMap " + version + ", user: " + username);
+	if (projectManager->currProject)
+		window->setTitle(projectManager->currProject->getName() + " / RapidMap " + version + ", user: " + username);
 	else
 		window->setTitle(std::string("No project opened") + " / RapidMap " + version + ", user: " + username);
 
-	stateMachine.GetActiveState()->updateState(window);
+	//stateMachine.GetActiveState()->updateState(window);
 
-	sf::FloatRect spaceLeft(sf::Vector2f(0, 0), mainView.getSize());
-
-	sf::FloatRect stripSpace(sf::Vector2f(spaceLeft.left, spaceLeft.top), sf::Vector2f(spaceLeft.width, 20));
-
-	menuStrip.updateInterface(stripSpace);
-
-	spaceLeft.top = menuStrip.view.getSize().y;
-	spaceLeft.height = spaceLeft.height - menuStrip.view.getSize().y;
-
-	sf::FloatRect stateSpace(sf::Vector2f(spaceLeft.left + spaceLeft.width - 100, spaceLeft.top), sf::Vector2f(100, spaceLeft.height));
-
-	stateBlock.updateInterface(stateSpace);
-
-	spaceLeft.width = spaceLeft.width - stateBlock.view.getSize().x;
-
-	workSpace.updateInterface(spaceLeft);
+	window->updateWindow();
 }
 
 
 
 void Application::render()
 {
-	window->clear(sf::Color::White);
+	window->render();
 
-	window->setView(mainView);
+	//window->clear(sf::Color::White);
 
-	workSpace.render();
+	//window->setView(mainView);
 
-	menuStrip.render();
+	//workSpace.render();
 
-	stateBlock.render();
+	//menuStrip.render();
 
-	window->display();
+	//stateBlock.render();
+
+	//window->display();
 }
 
 
@@ -183,12 +138,12 @@ void Application::initWindow()
 {
 	Log::makeLog("app.initWindow started...");
 
-	window = new sf::RenderWindow(sf::VideoMode(700, 500), "RapidMap", sf::Style::Default);
+	//window = new sf::RenderWindow(sf::VideoMode(700, 500), "RapidMap", sf::Style::Default);
+	window = new Window(sf::VideoMode(700, 500), "RapidMap", sf::Style::Default);
+	window->core = this;
 
-	mainView = window->getDefaultView();
-
-	StatePtr menuState(new MainMenuState());
-	stateMachine.AddState(std::move(menuState));
+	//StatePtr menuState(new MainMenuState());
+	//stateMachine.AddState(std::move(menuState));
 
 	Log::makeLog("app.initWindow finished");
 }
@@ -221,17 +176,37 @@ void Application::initInterfaces()
 {
 	Log::makeLog("app.initInterfaces started...");
 
-	workSpace.skeletonEnabled = true;
-	workSpace.nodeSkeletonEnabled = true;
-	workSpace.setWindow(window);
-	workSpace.zoomLevel = 1;
-	workSpace.prevMousePos = sf::Mouse::getPosition(*window);
+	//workSpace.skeletonEnabled = true;
+	//workSpace.nodeSkeletonEnabled = true;
+	//workSpace.setWindow(window);
+	//workSpace.zoomLevel = 1;
+	//workSpace.prevMousePos = sf::Mouse::getPosition(*window);
 
-	menuStrip.setWindow(window);
-	menuStrip.resources = &assetManager;
-	menuStrip.init();
+	std::unique_ptr<Workspace> work(new Workspace());
+	work->skeletonEnabled = true;
+	work->nodeSkeletonEnabled = true;
+	work->zoomLevel = 1;
+	work->prevMousePos = sf::Mouse::getPosition(*window);
+	work->projectManager = projectManager;
+	//work->core = this;
+
+	window->addInterface(std::move(work));
+
+	//menuStrip.setWindow(window);
+	//menuStrip.resources = &assetManager;
+	//menuStrip.init();
 	
-	stateBlock.setWindow(window);
+	std::unique_ptr<MenuStrip> strip(new MenuStrip());
+	strip->resources = &assetManager;
+	strip->init();
+
+	window->addInterface(std::move(strip));
+
+	//stateBlock.setWindow(window);
+
+	std::unique_ptr<StateBlock> stateblock(new StateBlock());
+
+	window->addInterface(std::move(stateblock));
 
 	Log::makeLog("app.initInterfaces finished");
 }
@@ -248,123 +223,136 @@ void Application::initResources()
 }
 
 
-
-void Application::createProject()
+//
+//void Application::createProject()
+//{
+//	if (projectManager->currProject)
+//	{
+//		int res = MessageBox(NULL, "Do you want to save current project?", "Create new project", MB_YESNOCANCEL);
+//		switch (res)
+//		{
+//		case IDYES:
+//			saveProject();
+//			break;
+//		case IDNO:
+//			break;
+//		case IDCANCEL:
+//			return;
+//		default:
+//			return;
+//		}
+//	}
+//
+//	//delete currProject;
+//	//currProject = new Project();
+//	projectManager->currProject = std::make_unique<Project>();
+//	projectManager->currProject->create(username, version);
+//	//workSpace.project = currProject;
+//}
+//
+//void Application::openProject()
+//{
+//	if (projectManager->currProject)
+//	{
+//		int res = MessageBox(NULL, "Do you want to save current project?", "Open project", MB_YESNOCANCEL);
+//		switch (res)
+//		{
+//		case IDYES:
+//			saveProject();
+//			break;
+//		case IDNO:
+//			break;
+//		case IDCANCEL:
+//			return;
+//		default:
+//			return;
+//		}
+//	}
+//
+//	std::string path = getOpenName();
+//	
+//	if (path != "")
+//	{
+//		/*delete currProject;
+//		currProject = new Project();
+//		currProject->open(path);
+//		workSpace.project = currProject;*/
+//		projectManager->currProject = std::make_unique<Project>();
+//		projectManager->currProject->open(path);
+//	}
+//}
+//
+//void Application::saveProject()
+//{
+//	if (projectManager->currProject->getFilePath() != "")
+//		projectManager->currProject->save();
+//	else
+//	{
+//		std::string path = getSaveName();
+//		if(path != "")
+//			projectManager->currProject->saveAs(path);
+//	}
+//}
+//
+//void Application::saveProjectAs()
+//{
+//	std::string path = getSaveName();
+//	if (path != "")
+//		projectManager->currProject->saveAs(path);
+//}
+//
+//void Application::saveProjectCopy()
+//{
+//	std::string path = getSaveName();
+//	if (path != "")
+//		projectManager->currProject->saveCopy(path);
+//}
+//
+//void Application::attachOSMData()
+//{
+//	if (projectManager->currProject)
+//	{
+//		try
+//		{
+//			projectManager->currProject->attachData(load_map_data());
+//		}
+//		catch (...)
+//		{
+//
+//		}
+//	}
+//	else MessageBox(NULL, "Create a project at first", "No project opened", MB_OK);
+//}
+//
+void Application::closeWindow(Window* win)
 {
-	if (currProject)
+	if (win == window)
 	{
-		int res = MessageBox(NULL, "Do you want to save current project?", "Create new project", MB_YESNOCANCEL);
-		switch (res)
-		{
-		case IDYES:
-			saveProject();
-			break;
-		case IDNO:
-			break;
-		case IDCANCEL:
-			return;
-		default:
-			return;
-		}
-	}
-
-	delete currProject;
-	currProject = new Project();
-	currProject->create(username, version);
-	workSpace.project = currProject;
-}
-
-void Application::openProject()
-{
-	if (currProject)
-	{
-		int res = MessageBox(NULL, "Do you want to save current project?", "Open project", MB_YESNOCANCEL);
-		switch (res)
-		{
-		case IDYES:
-			saveProject();
-			break;
-		case IDNO:
-			break;
-		case IDCANCEL:
-			return;
-		default:
-			return;
-		}
-	}
-
-	std::string path = getOpenName();
-	
-	if (path != "")
-	{
-		delete currProject;
-		currProject = new Project();
-		currProject->open(path);
-		workSpace.project = currProject;
+		if (this->exit())
+			win->close();
+		else return;
 	}
 }
 
-void Application::saveProject()
+bool Application::exit()
 {
-	if (currProject->getFilePath() != "")
-		currProject->save();
-	else
-	{
-		std::string path = getSaveName();
-		if(path != "")
-			currProject->saveAs(path);
-	}
-}
-
-void Application::saveProjectAs()
-{
-	std::string path = getSaveName();
-	if (path != "")
-		currProject->saveAs(path);
-}
-
-void Application::saveProjectCopy()
-{
-	std::string path = getSaveName();
-	if (path != "")
-		currProject->saveCopy(path);
-}
-
-void Application::attachOSMData()
-{
-	if (currProject)
-	{
-		try
-		{
-			currProject->attachData(load_map_data());
-		}
-		catch (...)
-		{
-
-		}
-	}
-	else MessageBox(NULL, "Create a project at first", "No project opened", MB_OK);
-}
-
-void Application::exit()
-{
-	if (currProject)
+	if (projectManager->currProject)
 	{
 		int res = MessageBox(NULL, "Do you want to save current project?", "Exit", MB_YESNOCANCEL);
 		switch (res)
 		{
 		case IDYES:
-			saveProject();
+			projectManager->saveProject();
 			break;
 		case IDNO:
 			break;
 		case IDCANCEL:
-			return;
+			return false;
 		default:
 			break;
 		}
 	}
 
-	window->close();
+	return true;
 }
 

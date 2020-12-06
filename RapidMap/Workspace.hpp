@@ -2,6 +2,8 @@
 #include "Interface.hpp"
 #include "Project.hpp"
 
+//class ProjectManager;
+
 class Workspace : public Interface
 {
 public:
@@ -12,7 +14,7 @@ public:
 	void render();
 
 public:
-	Project* project;
+	std::shared_ptr<ProjectManager> projectManager;
 
 	bool skeletonEnabled;
 	bool nodeSkeletonEnabled;

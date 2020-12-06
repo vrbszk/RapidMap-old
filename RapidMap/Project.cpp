@@ -1,9 +1,11 @@
 #include <fstream>
 #include <cmath>
 #include <iomanip>
+#include <Windows.h>
 
 #include "Project.hpp"
 #include "Log.hpp"
+#include "load_data_module.hpp"
 
 #define PI 3.14159
 #define EARTH_RADIUS (6378137 / 5)
@@ -510,3 +512,110 @@ std::string Project::getFilePath()
 	return path;
 }
 
+
+
+void ProjectManager::createProject()
+{
+	if (currProject)
+	{
+		int res = MessageBox(NULL, "Do you want to save current project?", "Create new project", MB_YESNOCANCEL);
+		switch (res)
+		{
+		case IDYES:
+			saveProject();
+			break;
+		case IDNO:
+			break;
+		case IDCANCEL:
+			return;
+		default:
+			return;
+		}
+	}
+
+	//delete currProject;
+	//currProject = new Project();
+	currProject = std::make_unique<Project>();
+	currProject->create(core->username, core->version);
+	//workSpace.project = currProject;
+}
+
+void ProjectManager::openProject()
+{
+	if (currProject)
+	{
+		int res = MessageBox(NULL, "Do you want to save current project?", "Open project", MB_YESNOCANCEL);
+		switch (res)
+		{
+		case IDYES:
+			saveProject();
+			break;
+		case IDNO:
+			break;
+		case IDCANCEL:
+			return;
+		default:
+			return;
+		}
+	}
+
+	std::string path = getOpenName();
+
+	if (path != "")
+	{
+		/*delete currProject;
+		currProject = new Project();
+		currProject->open(path);
+		workSpace.project = currProject;*/
+		currProject = std::make_unique<Project>();
+		currProject->open(path);
+	}
+}
+
+void ProjectManager::saveProject()
+{
+	if (!currProject) return;
+
+	if (currProject->getFilePath() != "")
+		currProject->save();
+	else
+	{
+		std::string path = getSaveName();
+		if (path != "")
+			currProject->saveAs(path);
+	}
+}
+
+void ProjectManager::saveProjectAs()
+{
+	if (!currProject) return;
+
+	std::string path = getSaveName();
+	if (path != "")
+		currProject->saveAs(path);
+}
+
+void ProjectManager::saveProjectCopy()
+{
+	if (!currProject) return;
+
+	std::string path = getSaveName();
+	if (path != "")
+		currProject->saveCopy(path);
+}
+
+void ProjectManager::attachOSMData()
+{
+	if (currProject)
+	{
+		try
+		{
+			currProject->attachData(load_map_data());
+		}
+		catch (...)
+		{
+
+		}
+	}
+	else MessageBox(NULL, "Create a project at first", "No project opened", MB_OK);
+}

@@ -5,19 +5,34 @@ Workspace::Workspace()
 
 }
 
-void Workspace::updateEvents(sf::Event e)
+void Workspace::updateEvents(sf::Event event)
 {
-	switch (e.type)
+	switch (event.type)
 	{
 	case sf::Event::KeyPressed:
 	{
-		switch (e.key.code)
+		switch (event.key.code)
 		{
 		case sf::Keyboard::E:
 			skeletonEnabled = !skeletonEnabled;
 			break;
+		case sf::Keyboard::L:
+			zoomLevel = 1;
+			break;
 		case sf::Keyboard::N:
-			nodeSkeletonEnabled = !nodeSkeletonEnabled;
+			if(event.key.control) projectManager->createProject();
+			else nodeSkeletonEnabled = !nodeSkeletonEnabled;
+			break;
+		case sf::Keyboard::O:
+			if (event.key.control) projectManager->openProject();
+			break;
+		case sf::Keyboard::S:
+			if (event.key.control && !event.key.alt) projectManager->saveProject();
+			else if (event.key.control && event.key.alt) projectManager->saveProjectAs();
+			else if (!event.key.control && event.key.alt) projectManager->saveProjectCopy();
+			break;
+		case sf::Keyboard::T:
+			if (event.key.control) projectManager->attachOSMData();
 			break;
 		}
 		break;
@@ -26,20 +41,20 @@ void Workspace::updateEvents(sf::Event e)
 	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
-			viewCenter.x = viewCenter.x + (prevMousePos.x - e.mouseMove.x) * zoomLevel;
-			viewCenter.y = viewCenter.y + (prevMousePos.y - e.mouseMove.y) * zoomLevel;
+			viewCenter.x = viewCenter.x + (prevMousePos.x - event.mouseMove.x) * zoomLevel;
+			viewCenter.y = viewCenter.y + (prevMousePos.y - event.mouseMove.y) * zoomLevel;
 		}
-		prevMousePos.x = e.mouseMove.x;
-		prevMousePos.y = e.mouseMove.y;
+		prevMousePos.x = event.mouseMove.x;
+		prevMousePos.y = event.mouseMove.y;
 		break;
 	}
 	case sf::Event::MouseWheelScrolled:
 	{
-		if (e.mouseWheelScroll.delta < 0)
+		if (event.mouseWheelScroll.delta < 0)
 		{
 			zoomLevel *= 2;
 		}
-		else if (e.mouseWheelScroll.delta > 0)
+		else if (event.mouseWheelScroll.delta > 0)
 		{
 			zoomLevel /= 2;
 		}
@@ -73,9 +88,9 @@ void Workspace::render()
 	window->draw(bound);
 
 
-	if (project)
+	if (projectManager->currProject)
 	{
-		for (auto it : project->infr.stopNodes)
+		for (auto it : projectManager->currProject->infr.stopNodes)
 		{
 			window->draw(it.second);
 		}
@@ -83,16 +98,16 @@ void Workspace::render()
 		{
 			if (nodeSkeletonEnabled)
 			{
-				for (auto it : project->infr.wayNodes)
+				for (auto it : projectManager->currProject->infr.wayNodes)
 				{
 					window->draw(it.second);
 				}
 			}
-			for (auto it : project->infr.streetWays)
+			for (auto it : projectManager->currProject->infr.streetWays)
 			{
 				window->draw(it.second);
 			}
-			for (auto it : project->infr.railWays)
+			for (auto it : projectManager->currProject->infr.railWays)
 			{
 				window->draw(it.second);
 			}

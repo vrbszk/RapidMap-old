@@ -12,6 +12,8 @@ public:
 	void open();
 	void close();
 
+	bool isOpened();
+
 	bool pollCommand(std::string& command);
 private:
 	std::queue<std::string> commandlist;

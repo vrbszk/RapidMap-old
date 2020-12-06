@@ -1,4 +1,7 @@
 #pragma once
+
+class Application;
+
 #include <SFML/Graphics.hpp>
 
 #include "Project.hpp"
@@ -9,6 +12,7 @@
 #include "MenuStrip.hpp"
 #include "StateBlock.hpp"
 #include "Console.hpp"
+#include "Window.hpp"
 
 class Application
 {
@@ -34,37 +38,42 @@ private:
 	void updateEnvironment(); //updating application module
 	void update(); //updating base
 	void render(); //rendering module
-	void exit();
+	bool exit();
 
+public:
+	//void createProject();
+	//void openProject();
+	//void saveProject();
+	//void saveProjectAs();
+	//void saveProjectCopy();
+	//void attachOSMData();
 
-	void createProject();
-	void openProject();
-	void saveProject();
-	void saveProjectAs();
-	void saveProjectCopy();
-	void attachOSMData();
-
+	void closeWindow(Window* win);
 
 private:
 	bool isRunning;
 
 	Console console;
 
-	sf::RenderWindow* window;
-	sf::Event event;
-	sf::View mainView;
+	//sf::RenderWindow* window;
+	Window* window;
+	//sf::Event event;
+	//sf::View mainView;
 
+public:
 	std::string username;
 	std::string version;
 
-	StateMachine stateMachine;
+private:
+	//StateMachine stateMachine;
 	AssetManager assetManager;
 	std::vector<InterfacePtr> interfaces;
-	MenuStrip menuStrip;
-	Workspace workSpace;
-	StateBlock stateBlock;
+	//MenuStrip menuStrip;
+	//Workspace workSpace;
+	//StateBlock stateBlock;
 	
 
 
-	Project* currProject;
+	//Project* currProject;
+	std::shared_ptr<ProjectManager> projectManager;
 };
