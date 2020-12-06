@@ -2,10 +2,16 @@
 
 #include "Button.hpp"
 
+
+
+
+#include <iostream>
+
 void MainMenuState::Init()
 {
 	EntityPtr button(new Button(sf::Vector2f(300, 100)));
 	entityHolder.push_back(std::move(button));
+	std::cout << "MainMenuState inited" << std::endl;
 }
 
 void MainMenuState::updateEvents(sf::Event event)

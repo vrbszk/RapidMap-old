@@ -165,7 +165,10 @@ void Application::initInterfaces()
 
 	window->addInterface(std::move(strip));
 
-	std::unique_ptr<StateBlock> stateblock(new StateBlock());
+	std::unique_ptr<StateBlock> stateblock = std::make_unique<StateBlock>();//(new StateBlock());
+
+	StatePtr menuState = std::make_unique<MainMenuState>();
+	stateblock->stateList.AddState(std::move(menuState));
 
 	window->addInterface(std::move(stateblock));
 

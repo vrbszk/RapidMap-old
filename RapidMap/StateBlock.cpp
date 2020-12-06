@@ -8,6 +8,8 @@ void StateBlock::updateEvents(sf::Event e)
 
 void StateBlock::updateInterface(sf::FloatRect space)
 {
+	stateList.ProcessStateChanges();
+
 	if (!stateList.IsEmpty())
 		stateList.GetActiveState()->updateState(window);
 
