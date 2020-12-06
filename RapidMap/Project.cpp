@@ -1,9 +1,10 @@
+#include "Project.hpp"
+
 #include <fstream>
 #include <cmath>
 #include <iomanip>
 #include <Windows.h>
 
-#include "Project.hpp"
 #include "Log.hpp"
 #include "load_data_module.hpp"
 
@@ -533,11 +534,8 @@ void ProjectManager::createProject()
 		}
 	}
 
-	//delete currProject;
-	//currProject = new Project();
 	currProject = std::make_unique<Project>();
 	currProject->create(core->username, core->version);
-	//workSpace.project = currProject;
 }
 
 void ProjectManager::openProject()
@@ -563,10 +561,6 @@ void ProjectManager::openProject()
 
 	if (path != "")
 	{
-		/*delete currProject;
-		currProject = new Project();
-		currProject->open(path);
-		workSpace.project = currProject;*/
 		currProject = std::make_unique<Project>();
 		currProject->open(path);
 	}

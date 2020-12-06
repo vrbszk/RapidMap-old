@@ -1,8 +1,9 @@
 #pragma once
+
+class Workspace;
+
 #include "Interface.hpp"
 #include "Project.hpp"
-
-//class ProjectManager;
 
 class Workspace : public Interface
 {

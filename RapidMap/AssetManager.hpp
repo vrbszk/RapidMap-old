@@ -1,8 +1,8 @@
 #pragma once
-
 #include <map>
-
 #include <SFML/Graphics.hpp>
+
+class AssetManager;
 
 class AssetManager
 {

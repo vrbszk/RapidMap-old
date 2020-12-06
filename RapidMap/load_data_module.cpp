@@ -1,4 +1,5 @@
 #include "load_data_module.hpp"
+
 #include "Log.hpp"
 
 OPENFILENAME getRapidMapOFN()

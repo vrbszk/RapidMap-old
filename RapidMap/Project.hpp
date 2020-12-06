@@ -1,12 +1,23 @@
 #pragma once
-
-class ProjectManager;
-
 #include <string>
-#include "OSM.hpp"
 #include <SFML/Graphics.hpp>
 #include <memory>
+
+class StreetNode;
+class Stop;
+class Street;
+class Railway;
+class CityInfrastructure;
+
+class Project;
+class ProjectManager;
+
+#include "OSM.hpp"
 #include "Application.hpp"
+
+StreetNode node_to_street(OSM_Element el, sf::Vector2f midPos);
+Stop node_to_stop(OSM_Element el, sf::Vector2f midPos);
+sf::Vector2f getMidPos(OSM_Bounds bounds);
 
 class StreetNode : public sf::Drawable, public sf::Transformable
 {
@@ -20,6 +31,8 @@ private:
 	sf::CircleShape shape;
 };
 
+
+
 class Stop : public sf::Drawable, public sf::Transformable
 {
 public:
@@ -32,6 +45,8 @@ private:
 	sf::CircleShape shape;
 };
 
+
+
 class Street : public sf::Drawable
 {
 public:
@@ -42,6 +57,8 @@ public:
 	std::string osmID;
 	std::vector<std::string> nodeids;
 };
+
+
 
 class Railway : public sf::Drawable
 {
@@ -55,6 +72,8 @@ public:
 	std::vector<std::string> nodeids;
 };
 
+
+
 class CityInfrastructure
 {
 public:
@@ -64,9 +83,7 @@ public:
 	std::map<std::string, Railway> railWays;
 };
 
-StreetNode node_to_street(OSM_Element el, sf::Vector2f midPos);
-Stop node_to_stop(OSM_Element el, sf::Vector2f midPos);
-sf::Vector2f getMidPos(OSM_Bounds bounds);
+
 
 class Project
 {
@@ -101,10 +118,9 @@ private:
 	std::string time_edited;
 public:
 	CityInfrastructure infr;
-	//std::map<std::string, StreetNode> streetNodes;
-
-	//std::map<std::string, Street> streets;
 };
+
+
 
 class ProjectManager
 {

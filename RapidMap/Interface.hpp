@@ -2,6 +2,10 @@
 #include <SFML\Graphics.hpp>
 #include <memory>
 
+class Interface;
+
+typedef std::unique_ptr<Interface> InterfacePtr;
+
 class Interface
 {
 public:
@@ -17,5 +21,3 @@ public:
 protected:
 	sf::RenderWindow* window;
 };
-
-typedef std::unique_ptr<Interface> InterfacePtr;

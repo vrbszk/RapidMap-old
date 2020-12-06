@@ -11,8 +11,6 @@ Console::Console() : t(&Console::cinThread, this)
 Console::~Console()
 {
 	this->isWorking = false;
-	//try { t.~thread(); }
-	//catch (...) { }
 	t.join();
 }
 
@@ -45,7 +43,6 @@ bool Console::pollCommand(std::string& command)
 void Console::cinThread()
 {
 	std::string line;
-	//std::cout << "Thread launched" << std::endl;
 	this->isWorking = true;
 	while (this->isWorking)
 	{
@@ -61,8 +58,6 @@ void Console::cinThread()
 
 		std::cin.clear();
 	}
-
-	std::cout << "Thread terminated" << std::endl;
 }
 
 void Console::extractCommand(std::string& line)

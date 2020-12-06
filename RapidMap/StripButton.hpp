@@ -1,5 +1,7 @@
 #pragma once
 
+class StripButton;
+
 #include "Button.hpp"
 
 class StripButton : public Button

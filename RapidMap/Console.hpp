@@ -3,6 +3,8 @@
 #include <string>
 #include <thread>
 
+class Console;
+
 class Console
 {
 public:

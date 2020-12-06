@@ -1,6 +1,9 @@
 #pragma once
-
 #include <vector>
+#include <memory>
+
+class State;
+typedef std::unique_ptr<State> StatePtr;
 
 #include "Entity.hpp"
 

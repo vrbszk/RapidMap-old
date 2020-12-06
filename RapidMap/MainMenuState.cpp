@@ -1,4 +1,5 @@
 #include "MainMenuState.hpp"
+
 #include "Button.hpp"
 
 void MainMenuState::Init()

@@ -1,8 +1,9 @@
+#include "Log.hpp"
+
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
-
 
 #include <sstream>
 #include <cmath>
@@ -11,11 +12,7 @@
 #include <ctime>
 #include <stdio.h>
 
-
 #include <Windows.h>
-
-
-#include "Log.hpp"
 
 std::string Log::path = "";
 
@@ -37,7 +34,6 @@ void Log::makeLog(std::string text)
 {
 	std::ofstream logFile(path, std::ios::app);
 	logFile << getCurrTimestamp() << " : " << text << "\n";
-	//std::cout << getCurrTimestamp() << " : " << text << "\n";
 	logFile.close();
 }
 

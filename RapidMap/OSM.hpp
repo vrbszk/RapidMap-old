@@ -6,6 +6,15 @@
 #include <vector>
 #include <map>
 
+struct OSM_Param;
+struct OSM_Member;
+struct OSM_Element;
+struct OSM_Bounds;
+struct OSM_Data;
+
+std::ostream& operator<<(std::ostream& c, OSM_Element el);
+std::ostream& operator<<(std::ostream& c, OSM_Data data);
+
 struct OSM_Param // osm params k = v
 {
 public:
@@ -51,8 +60,3 @@ public:
 
 	void parse(std::string path);
 };
-
-std::ostream& operator<<(std::ostream& c, OSM_Element el);
-std::ostream& operator<<(std::ostream& c, OSM_Data data);
-
-OSM_Data parse(std::string path); // parsing from osm XML file to elements

@@ -1,5 +1,7 @@
 #pragma once
 
+class MainMenuState;
+
 #include "State.hpp"
 
 class MainMenuState : public State

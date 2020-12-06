@@ -1,11 +1,10 @@
 #pragma once
-
 #include <memory>
 #include <stack>
 
-#include "State.hpp"
+class StateMachine;
 
-typedef std::unique_ptr<State> StatePtr;
+#include "State.hpp"
 
 class StateMachine
 {

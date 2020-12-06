@@ -1,5 +1,7 @@
 #pragma once
 
+class StateBlock;
+
 #include "Interface.hpp"
 #include "StateMachine.hpp"
 
@@ -12,5 +14,4 @@ public:
 
 public:
 	StateMachine stateList;
-
 };

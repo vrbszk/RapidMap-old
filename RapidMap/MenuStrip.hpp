@@ -1,3 +1,7 @@
+#pragma once
+
+class MenuStrip;
+
 #include "Interface.hpp"
 #include "StripButton.hpp"
 #include "AssetManager.hpp"

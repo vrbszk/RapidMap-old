@@ -1,5 +1,7 @@
 #pragma once
 
+class Button;
+
 #include "Entity.hpp"
 
 class Button : public Entity

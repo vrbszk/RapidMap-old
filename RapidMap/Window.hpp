@@ -1,8 +1,8 @@
 #pragma once
+#include <SFML/Graphics.hpp>
 
 class Window;
 
-#include <SFML/Graphics.hpp>
 #include "Interface.hpp"
 #include "Application.hpp"
 
