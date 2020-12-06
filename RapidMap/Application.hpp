@@ -8,6 +8,7 @@
 #include "Workspace.hpp"
 #include "MenuStrip.hpp"
 #include "StateBlock.hpp"
+#include "Console.hpp"
 
 class Application
 {
@@ -29,6 +30,7 @@ private:
 
 	//Subcore modules
 	void updateEvents(); // processing events module
+	void updateCommands();
 	void updateEnvironment(); //updating application module
 	void update(); //updating base
 	void render(); //rendering module
@@ -46,6 +48,7 @@ private:
 private:
 	bool isRunning;
 
+	Console console;
 
 	sf::RenderWindow* window;
 	sf::Event event;
@@ -61,6 +64,7 @@ private:
 	Workspace workSpace;
 	StateBlock stateBlock;
 	
+
 
 	Project* currProject;
 };

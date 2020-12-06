@@ -115,12 +115,14 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>C:\Libraries\SFML VS\x64\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-system.lib; sfml-window.lib; sfml-graphics.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>NotSet</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="Console.cpp" />
     <ClCompile Include="Interface.cpp" />
     <ClCompile Include="load_data_module.cpp" />
     <ClCompile Include="Log.cpp" />
@@ -138,6 +140,7 @@
     <ClInclude Include="Application.hpp" />
     <ClInclude Include="AssetManager.hpp" />
     <ClInclude Include="Button.hpp" />
+    <ClInclude Include="Console.hpp" />
     <ClInclude Include="Entity.hpp" />
     <ClInclude Include="Interface.hpp" />
     <ClInclude Include="load_data_module.hpp" />

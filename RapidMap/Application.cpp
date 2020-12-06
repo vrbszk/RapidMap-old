@@ -4,6 +4,8 @@
 #include <Windows.h>
 #include "load_data_module.hpp"
 
+#include <thread>
+
 Application::Application()
 {
 	Log::clearLog();
@@ -21,7 +23,10 @@ Application::~Application()
 	Log::makeLog("App destroyed");
 }
 
-
+void x()
+{
+	
+}
 
 //CORE
 void Application::run()
@@ -38,12 +43,18 @@ void Application::run()
 	
 	Log::makeLog("Init finished");
 
+	//std::thread t(x);
+
 	while (isRunning)
 	{
 		stateMachine.ProcessStateChanges();
 		update();
 		render();
 	}
+
+	
+
+	//t.join();
 }
 
 
@@ -51,7 +62,7 @@ void Application::run()
 void Application::update()
 {
 	updateEvents();
-
+	updateCommands();
 	updateEnvironment();
 }
 
@@ -108,6 +119,16 @@ void Application::updateEvents()
 	}
 }
 
+
+void Application::updateCommands()
+{
+	std::string command;
+	while (console.pollCommand(command))
+	{
+		std::cout << "New command extracted: " << command << std::endl;
+	}
+	console.open();
+}
 
 
 void Application::updateEnvironment()
