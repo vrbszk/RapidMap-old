@@ -9,7 +9,9 @@
 
 void MainMenuState::Init()
 {
-	EntityPtr button(new Button(sf::Vector2f(300, 100)));
+	std::unique_ptr<Button> button(new Button(sf::Vector2f(300, 100)));
+	button->setActiveColor(sf::Color::Yellow);
+	button->setPassiveColor(sf::Color::Magenta);
 	entityHolder.push_back(std::move(button));
 	std::cout << "MainMenuState inited" << std::endl;
 }
