@@ -67,7 +67,14 @@ void Window::updateWindow()
 	spaceLeft.top = interfaces[1]->view.getSize().y;
 	spaceLeft.height = spaceLeft.height - interfaces[1]->view.getSize().y;
 
-	sf::FloatRect stateSpace(sf::Vector2f(spaceLeft.left + spaceLeft.width - 100, spaceLeft.top), sf::Vector2f(100, spaceLeft.height));
+	sf::FloatRect toolstripSpace(sf::Vector2f(spaceLeft.left, spaceLeft.top), sf::Vector2f(spaceLeft.width, 50));
+
+	interfaces[3]->updateInterface(toolstripSpace);
+
+	spaceLeft.top = interfaces[3]->view.getSize().y + spaceLeft.top;
+	spaceLeft.height = spaceLeft.height - interfaces[3]->view.getSize().y;
+
+	sf::FloatRect stateSpace(sf::Vector2f(spaceLeft.left + spaceLeft.width - 200, spaceLeft.top), sf::Vector2f(200, spaceLeft.height));
 
 	//stateBlock.updateInterface(stateSpace);
 	interfaces[2]->updateInterface(stateSpace);

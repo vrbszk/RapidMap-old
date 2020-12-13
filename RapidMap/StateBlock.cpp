@@ -2,16 +2,16 @@
 
 void StateBlock::updateEvents(sf::Event e)
 {
-	if (!stateList.IsEmpty())
-		stateList.GetActiveState()->updateEvents(e);
+	//if (!stateList.IsEmpty())
+	//	stateList.GetActiveState()->updateEvents(e);
 }
 
 void StateBlock::updateInterface(sf::FloatRect space)
 {
 	stateList.ProcessStateChanges();
 
-	if (!stateList.IsEmpty())
-		stateList.GetActiveState()->updateState(window);
+	//if (!stateList.IsEmpty())
+	//	stateList.GetActiveState()->updateState(window);
 
 	view.setSize(space.width, space.height);
 	view.setCenter(view.getSize().x / 2, view.getSize().y / 2);
@@ -31,8 +31,8 @@ void StateBlock::render()
 	bound.setPosition(5, 5);
 	window->draw(bound);
 
-	if(!stateList.IsEmpty())
-		stateList.GetActiveState()->render(window);
+	//if(!stateList.IsEmpty())
+	//	stateList.GetActiveState()->render(window);
 
 	window->setView(tempView);
 }

@@ -2,6 +2,7 @@
 
 #include <Windows.h>
 #include <thread>
+#include <typeinfo>
 
 #include "Log.hpp"
 #include "MainMenuState.hpp"
@@ -11,6 +12,7 @@
 #include "Workspace.hpp"
 #include "MenuStrip.hpp"
 #include "StateBlock.hpp"
+#include "ToolStrip.hpp"
 
 Application::Application() 
 {
@@ -168,10 +170,14 @@ void Application::initInterfaces()
 	std::unique_ptr<StateBlock> stateblock = std::make_unique<StateBlock>();//(new StateBlock());
 
 	StatePtr menuState = std::make_unique<MainMenuState>();
-	
 	stateblock->stateList.AddState(std::move(menuState));
 
 	window->addInterface(std::move(stateblock));
+
+	std::unique_ptr<ToolStrip> toolstrip = std::make_unique<ToolStrip>();
+	toolstrip->init();
+
+	window->addInterface(std::move(toolstrip));
 
 	Log::makeLog("app.initInterfaces finished");
 }
