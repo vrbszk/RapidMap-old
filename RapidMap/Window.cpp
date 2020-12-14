@@ -95,5 +95,37 @@ void Window::render()
 		(*it)->render();
 	}
 
+	this->setView(standardView);
+
+	if (hintString != "")
+	{
+		sf::Text text(hintString, hintFont, 12);
+		text.setFillColor(sf::Color::Black);
+		
+		text.setPosition(sf::Vector2f(sf::Mouse::getPosition(*this)));
+		
+
+		sf::RectangleShape shape(sf::Vector2f(text.getGlobalBounds().width + 6, text.getGlobalBounds().height + 6));
+		shape.setFillColor(sf::Color::Yellow);
+		shape.setOutlineThickness(1);
+		shape.setOutlineColor(sf::Color(255, 150, 0));
+		shape.setPosition(sf::Vector2f(sf::Mouse::getPosition(*this)));
+		shape.setOrigin(shape.getGlobalBounds().width, 0);
+		text.setOrigin(shape.getOrigin().x - 4, 2);
+
+		this->draw(shape);
+		this->draw(text);
+	}
+
 	this->display();
+}
+
+void Window::setHintText(std::string str)
+{
+	hintString = str;
+}
+
+void Window::setHintFont(sf::Font f)
+{
+	hintFont = f;
 }

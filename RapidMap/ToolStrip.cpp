@@ -14,7 +14,26 @@ void ToolStrip::init()
 
 void ToolStrip::updateEvents(sf::Event e)
 {
+	sf::View tempView = window->getView();
+	window->setView(view);
 
+	if (e.type == sf::Event::MouseButtonPressed && e.mouseButton.button == sf::Mouse::Left)
+	{
+		sf::Vector2f viewMousePos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
+		if (selectButton.getCollideBox().contains(viewMousePos))
+		{
+			selectButton.pressed = true;//!selectButton.pressed;
+			projectManager->tool = ProjectManager::SelectTool;
+		}
+	}
+
+	if (e.type == sf::Event::KeyPressed && e.key.code == sf::Keyboard::Escape)
+	{
+		selectButton.pressed = false;
+		projectManager->tool = ProjectManager::None;
+	}
+
+	window->setView(tempView);
 }
 
 void ToolStrip::updateInterface(sf::FloatRect space)

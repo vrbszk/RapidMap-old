@@ -22,8 +22,14 @@ public:
 	void updateEvents();
 	void updateWindow();
 
+	void setHintText(std::string str);
+	void setHintFont(sf::Font f);
+
 	Application* core;
 private:
 	std::vector<InterfacePtr> interfaces;
 	sf::View standardView;
+
+	std::string hintString;
+	sf::Font hintFont;
 };

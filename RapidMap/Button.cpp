@@ -17,6 +17,8 @@ void Button::init()
 	activeColor = sf::Color(100, 100, 100);
 	passiveColor = sf::Color(200, 200, 200);
 	pressedColor = sf::Color(150, 150, 150);
+
+	pressed = false;
 }
 
 Button::~Button()
@@ -28,7 +30,9 @@ void Button::update(sf::Vector2f mousePos)
 {
 	if (shape.getGlobalBounds().contains(mousePos))
 		shape.setFillColor(activeColor);
-	else 
+	else if (pressed)
+		shape.setFillColor(pressedColor);
+	else
 		shape.setFillColor(passiveColor);
 }
 
@@ -52,4 +56,9 @@ void Button::setPassiveColor(sf::Color c)
 void Button::setPressedColor(sf::Color c)
 {
 	pressedColor = c;
+}
+
+sf::FloatRect Button::getCollideBox()
+{
+	return shape.getGlobalBounds();
 }

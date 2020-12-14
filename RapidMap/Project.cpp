@@ -132,6 +132,19 @@ void Stop::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	target.draw(shape, states);
 }
 
+sf::FloatRect Stop::getCollideBox()
+{
+	sf::FloatRect res = shape.getGlobalBounds();
+	res.left += this->getPosition().x;
+	res.top += this->getPosition().y;
+	return res;
+}
+
+void Stop::setFillColor(sf::Color c)
+{
+	shape.setFillColor(c);
+}
+
 void StreetNode::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	states.transform *= this->getTransform();

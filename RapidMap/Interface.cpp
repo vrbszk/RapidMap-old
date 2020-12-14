@@ -1,11 +1,11 @@
 #include "Interface.hpp"
 
-void Interface::setWindow(sf::RenderWindow* win)
+void Interface::setWindow(Window* win)
 {
 	window = win;
 }
 
-sf::RenderWindow* Interface::getWindow()
+Window* Interface::getWindow()
 {
 	return window;
 }

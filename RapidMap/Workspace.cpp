@@ -69,6 +69,34 @@ void Workspace::updateInterface(sf::FloatRect space)
 	view.setCenter(viewCenter);
 	view.setViewport(sf::FloatRect(space.left / window->getSize().x, space.top / window->getSize().y,
 		space.width / window->getSize().x, space.height / window->getSize().y)); // space в даному випадку має остаточні розміри, а значить не потрібно прив'язуватися до викривленого view
+
+	window->setHintText("");
+
+	sf::View tempView = window->getView();
+	window->setView(view);
+
+	if(projectManager->currProject)
+	{
+		if (projectManager->tool == ProjectManager::ToolList::SelectTool)
+		{
+			sf::Vector2f viewMousePos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
+			
+			for (auto it = projectManager->currProject->infr.stopNodes.begin();
+				it != projectManager->currProject->infr.stopNodes.end(); it++)
+			{
+				//std::cout << it->second.getCollideBox().left << " " << it->second.getCollideBox().top << std::endl;
+				if (it->second.getCollideBox().contains(viewMousePos))
+				{
+					it->second.setFillColor(sf::Color::Red);
+					window->setHintText("id: " + it->first);
+				}
+				else
+					it->second.setFillColor(sf::Color::Green);
+			}
+		}
+	}
+
+	window->setView(tempView);
 }
 
 void Workspace::render()

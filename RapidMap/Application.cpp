@@ -117,6 +117,7 @@ void Application::initWindow()
 
 	window = new Window(sf::VideoMode(700, 500), "RapidMap", sf::Style::Default);
 	window->core = this;
+	window->setHintFont(assetManager.GetFont("main"));
 
 	//StatePtr menuState(new MainMenuState());
 	//stateMachine.AddState(std::move(menuState));
@@ -163,6 +164,7 @@ void Application::initInterfaces()
 	
 	std::unique_ptr<MenuStrip> strip(new MenuStrip());
 	strip->resources = &assetManager;
+	strip->projectManager = projectManager;
 	strip->init();
 
 	window->addInterface(std::move(strip));
@@ -171,10 +173,12 @@ void Application::initInterfaces()
 
 	StatePtr menuState = std::make_unique<MainMenuState>();
 	stateblock->stateList.AddState(std::move(menuState));
+	stateblock->projectManager = projectManager;
 
 	window->addInterface(std::move(stateblock));
 
 	std::unique_ptr<ToolStrip> toolstrip = std::make_unique<ToolStrip>();
+	toolstrip->projectManager = projectManager;
 	toolstrip->init();
 
 	window->addInterface(std::move(toolstrip));

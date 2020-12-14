@@ -15,7 +15,7 @@ public:
 	void render();
 
 public:
-	std::shared_ptr<ProjectManager> projectManager;
+	
 
 	bool skeletonEnabled;
 	bool nodeSkeletonEnabled;

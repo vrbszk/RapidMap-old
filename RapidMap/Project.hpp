@@ -38,6 +38,8 @@ class Stop : public sf::Drawable, public sf::Transformable
 public:
 	Stop();
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+	sf::FloatRect getCollideBox();
+	void setFillColor(sf::Color c);
 
 	std::string osmID;
 
@@ -127,6 +129,9 @@ class ProjectManager
 public:
 	Application* core;
 	std::unique_ptr<Project> currProject;
+
+	enum ToolList { None, SelectTool };
+	int tool;
 
 	void createProject();
 	void openProject();

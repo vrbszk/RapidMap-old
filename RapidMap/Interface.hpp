@@ -6,18 +6,21 @@ class Interface;
 
 typedef std::unique_ptr<Interface> InterfacePtr;
 
+#include "Project.hpp"
+
 class Interface
 {
 public:
 	sf::View view;
+	std::shared_ptr<ProjectManager> projectManager;
 
-	void setWindow(sf::RenderWindow* win);
-	sf::RenderWindow* getWindow();
+	void setWindow(Window* win);
+	Window* getWindow();
 
 	virtual void updateEvents(sf::Event e) = 0;
 	virtual void updateInterface(sf::FloatRect space) = 0;
 	virtual void render() = 0;
 
 protected:
-	sf::RenderWindow* window;
+	Window* window;
 };
