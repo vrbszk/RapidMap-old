@@ -8,8 +8,8 @@ ToolStrip::ToolStrip() : selectButton(sf::Vector2f(50, 50))
 void ToolStrip::init()
 {
 	//selectButton.setPosition(3, 3);
-	selectButton.setPassiveColor(sf::Color(192, 72, 72));
-	selectButton.setActiveColor(sf::Color(96, 24, 72));
+	//selectButton.setPassiveColor(sf::Color(192, 72, 72));
+	//selectButton.setActiveColor(sf::Color(96, 24, 72));
 }
 
 void ToolStrip::updateEvents(sf::Event e)

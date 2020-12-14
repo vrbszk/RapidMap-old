@@ -3,13 +3,20 @@
 Button::Button() 
 	: shape()
 {
-
+	init();
 }
 
 Button::Button(sf::Vector2f size)
 	: shape(size)
 {
-	shape.setFillColor(sf::Color::Magenta);
+	init();
+}
+
+void Button::init()
+{
+	activeColor = sf::Color(100, 100, 100);
+	passiveColor = sf::Color(200, 200, 200);
+	pressedColor = sf::Color(150, 150, 150);
 }
 
 Button::~Button()
@@ -40,4 +47,9 @@ void Button::setActiveColor(sf::Color c)
 void Button::setPassiveColor(sf::Color c)
 {
 	passiveColor = c;
+}
+
+void Button::setPressedColor(sf::Color c)
+{
+	pressedColor = c;
 }
