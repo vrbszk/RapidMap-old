@@ -18,4 +18,5 @@ public:
 
 public:
 	Button selectButton;
+	Button addStationButton;
 };

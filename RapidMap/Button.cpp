@@ -28,7 +28,7 @@ Button::~Button()
 
 void Button::update(sf::Vector2f mousePos)
 {
-	if (shape.getGlobalBounds().contains(mousePos))
+	if (this->getCollideBox().contains(mousePos))
 		shape.setFillColor(activeColor);
 	else if (pressed)
 		shape.setFillColor(pressedColor);
@@ -60,5 +60,8 @@ void Button::setPressedColor(sf::Color c)
 
 sf::FloatRect Button::getCollideBox()
 {
-	return shape.getGlobalBounds();
+	sf::FloatRect rect = shape.getGlobalBounds();
+	rect.left += this->getPosition().x;
+	rect.top += this->getPosition().y;
+	return rect;
 }

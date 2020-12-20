@@ -87,6 +87,20 @@ public:
 
 
 
+class Line : public sf::Drawable
+{
+public:
+	void refresh(CityInfrastructure* cif);
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+
+	sf::VertexArray path;
+
+	//std::string osmID;
+	std::vector<std::string> stationids;
+};
+
+
+
 class Project
 {
 public:
@@ -120,6 +134,8 @@ private:
 	std::string time_edited;
 public:
 	CityInfrastructure infr;
+
+	Line line;
 };
 
 
@@ -130,7 +146,7 @@ public:
 	Application* core;
 	std::unique_ptr<Project> currProject;
 
-	enum ToolList { None, SelectTool };
+	enum ToolList { None, SelectTool, AddStation };
 	int tool;
 
 	void createProject();

@@ -1,13 +1,14 @@
 #include "ToolStrip.hpp"
 
-ToolStrip::ToolStrip() : selectButton(sf::Vector2f(50, 50))
+ToolStrip::ToolStrip() : selectButton(sf::Vector2f(50, 50)), addStationButton(sf::Vector2f(50, 50))
 {
 
 }
 
 void ToolStrip::init()
 {
-	//selectButton.setPosition(3, 3);
+	selectButton.setPosition(0, 0);
+	addStationButton.setPosition(50, 0);
 	//selectButton.setPassiveColor(sf::Color(192, 72, 72));
 	//selectButton.setActiveColor(sf::Color(96, 24, 72));
 }
@@ -23,13 +24,21 @@ void ToolStrip::updateEvents(sf::Event e)
 		if (selectButton.getCollideBox().contains(viewMousePos))
 		{
 			selectButton.pressed = true;//!selectButton.pressed;
-			projectManager->tool = ProjectManager::SelectTool;
+			addStationButton.pressed = false;
+			projectManager->tool = ProjectManager::ToolList::SelectTool;
+		}
+		if (addStationButton.getCollideBox().contains(viewMousePos))
+		{
+			selectButton.pressed = false;
+			addStationButton.pressed = true;
+			projectManager->tool = ProjectManager::ToolList::AddStation;
 		}
 	}
 
 	if (e.type == sf::Event::KeyPressed && e.key.code == sf::Keyboard::Escape)
 	{
 		selectButton.pressed = false;
+		addStationButton.pressed = false;
 		projectManager->tool = ProjectManager::None;
 	}
 
@@ -49,6 +58,7 @@ void ToolStrip::updateInterface(sf::FloatRect space)
 	window->setView(tempView);
 
 	selectButton.update(viewMousePos);//sf::Vector2f(sf::Mouse::getPosition(*window)));
+	addStationButton.update(viewMousePos);
 }
 
 void ToolStrip::render()
@@ -67,6 +77,7 @@ void ToolStrip::render()
 	window->draw(bound);
 
 	window->draw(selectButton);
+	window->draw(addStationButton);
 
 	window->setView(tempView);
 }

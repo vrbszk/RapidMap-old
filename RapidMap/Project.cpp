@@ -626,3 +626,20 @@ void ProjectManager::attachOSMData()
 	}
 	else MessageBox(NULL, "Create a project at first", "No project opened", MB_OK);
 }
+
+void Line::refresh(CityInfrastructure* cif)
+{
+	path = sf::VertexArray(sf::LineStrip, stationids.size());
+	int i = 0;
+	for (auto it : stationids)
+	{
+		path[i].position = cif->stopNodes[it].getPosition();
+		path[i].color = sf::Color::Blue;
+		i++;
+	}
+}
+
+void Line::draw(sf::RenderTarget & target, sf::RenderStates states) const
+{
+	target.draw(path, states);
+}

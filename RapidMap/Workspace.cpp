@@ -7,6 +7,9 @@ Workspace::Workspace()
 
 void Workspace::updateEvents(sf::Event event)
 {
+	sf::View tempView = window->getView();
+	window->setView(view);
+
 	switch (event.type)
 	{
 	case sf::Event::KeyPressed:
@@ -18,9 +21,10 @@ void Workspace::updateEvents(sf::Event event)
 			break;
 		case sf::Keyboard::L:
 			zoomLevel = 1;
+			viewCenter = sf::Vector2f(0, 0);
 			break;
 		case sf::Keyboard::N:
-			if(event.key.control) projectManager->createProject();
+			if (event.key.control) projectManager->createProject();
 			else nodeSkeletonEnabled = !nodeSkeletonEnabled;
 			break;
 		case sf::Keyboard::O:
@@ -48,6 +52,23 @@ void Workspace::updateEvents(sf::Event event)
 		prevMousePos.y = event.mouseMove.y;
 		break;
 	}
+	case sf::Event::MouseButtonPressed:
+	{
+		if (projectManager->tool == ProjectManager::ToolList::AddStation)
+		{
+			sf::Vector2f viewMousePos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
+			for (auto it = projectManager->currProject->infr.stopNodes.begin();
+				it != projectManager->currProject->infr.stopNodes.end(); it++)
+			{
+				if (it->second.getCollideBox().contains(viewMousePos))
+				{
+					projectManager->currProject->line.stationids.push_back(it->first);
+					projectManager->currProject->line.refresh(&projectManager->currProject->infr);
+				}
+			}
+		}
+		break;
+	}
 	case sf::Event::MouseWheelScrolled:
 	{
 		if (event.mouseWheelScroll.delta < 0)
@@ -61,6 +82,8 @@ void Workspace::updateEvents(sf::Event event)
 		break;
 	}
 	}
+
+	window->setView(tempView);
 }
 
 void Workspace::updateInterface(sf::FloatRect space)
@@ -75,12 +98,12 @@ void Workspace::updateInterface(sf::FloatRect space)
 	sf::View tempView = window->getView();
 	window->setView(view);
 
-	if(projectManager->currProject)
+	if (projectManager->currProject)
 	{
 		if (projectManager->tool == ProjectManager::ToolList::SelectTool)
 		{
 			sf::Vector2f viewMousePos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
-			
+
 			for (auto it = projectManager->currProject->infr.stopNodes.begin();
 				it != projectManager->currProject->infr.stopNodes.end(); it++)
 			{
@@ -88,6 +111,22 @@ void Workspace::updateInterface(sf::FloatRect space)
 				if (it->second.getCollideBox().contains(viewMousePos))
 				{
 					it->second.setFillColor(sf::Color::Red);
+					window->setHintText("id: " + it->first);
+				}
+				else
+					it->second.setFillColor(sf::Color::Green);
+			}
+		}
+		else if (projectManager->tool == ProjectManager::ToolList::AddStation)
+		{
+			sf::Vector2f viewMousePos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
+
+			for (auto it = projectManager->currProject->infr.stopNodes.begin();
+				it != projectManager->currProject->infr.stopNodes.end(); it++)
+			{
+				if (it->second.getCollideBox().contains(viewMousePos))
+				{
+					it->second.setFillColor(sf::Color::Magenta);
 					window->setHintText("id: " + it->first);
 				}
 				else
@@ -122,6 +161,9 @@ void Workspace::render()
 		{
 			window->draw(it.second);
 		}
+
+		window->draw(projectManager->currProject->line);
+
 		if (skeletonEnabled)
 		{
 			if (nodeSkeletonEnabled)
