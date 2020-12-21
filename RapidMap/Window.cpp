@@ -120,7 +120,12 @@ void Window::render()
 	this->display();
 }
 
-void Window::setHintText(std::string str)
+//void Window::setHintText(std::string str)
+//{
+//	hintString = str;
+//}
+
+void Window::setHintText(sf::String str)
 {
 	hintString = str;
 }

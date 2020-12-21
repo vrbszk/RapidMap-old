@@ -111,7 +111,8 @@ void Workspace::updateInterface(sf::FloatRect space)
 				if (it->second.getCollideBox().contains(viewMousePos))
 				{
 					it->second.setFillColor(sf::Color::Red);
-					window->setHintText("id: " + it->first);
+					//std::cout << it->second.name << std::endl;
+					window->setHintText("id: " + sf::String(it->first) + "\nname:" + sf::String::fromUtf8(it->second.name.begin(), it->second.name.end()));
 				}
 				else
 					it->second.setFillColor(sf::Color::Green);
@@ -127,7 +128,7 @@ void Workspace::updateInterface(sf::FloatRect space)
 				if (it->second.getCollideBox().contains(viewMousePos))
 				{
 					it->second.setFillColor(sf::Color::Magenta);
-					window->setHintText("id: " + it->first);
+					//window->setHintText("id: " + it->first);
 				}
 				else
 					it->second.setFillColor(sf::Color::Green);

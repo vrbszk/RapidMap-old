@@ -43,6 +43,8 @@ public:
 
 	std::string osmID;
 
+	std::string name;
+
 private:
 	sf::CircleShape shape;
 };

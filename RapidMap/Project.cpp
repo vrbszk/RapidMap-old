@@ -486,7 +486,17 @@ void Project::attachData(OSM_Data data)
 
 	for (auto it : stops)
 	{
+		std::string name = "";
+		for (auto p : it.params)
+		{
+			if (p.key == "name")
+			{
+				name = p.value;
+				break;
+			}
+		}
 		infr.stopNodes[it.id] = node_to_stop(it, midPos);
+		infr.stopNodes[it.id].name = name;
 	}
 
 	Log::makeLog("stops processed");
