@@ -54,19 +54,20 @@ void Workspace::updateEvents(sf::Event event)
 	}
 	case sf::Event::MouseButtonPressed:
 	{
-		if (projectManager->tool == ProjectManager::ToolList::AddStation)
-		{
-			sf::Vector2f viewMousePos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
-			for (auto it = projectManager->currProject->infr.stopNodes.begin();
-				it != projectManager->currProject->infr.stopNodes.end(); it++)
+		if (projectManager->currProject)
+			if (projectManager->tool == ProjectManager::ToolList::AddStation)
 			{
-				if (it->second.getCollideBox().contains(viewMousePos))
+				sf::Vector2f viewMousePos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
+				for (auto it = projectManager->currProject->infr.stopNodes.begin();
+					it != projectManager->currProject->infr.stopNodes.end(); it++)
 				{
-					projectManager->currProject->line.stationids.push_back(it->first);
-					projectManager->currProject->line.refresh(&projectManager->currProject->infr);
+					if (it->second.getCollideBox().contains(viewMousePos))
+					{
+						projectManager->currProject->line.stationids.push_back(it->first);
+						projectManager->currProject->line.refresh(&projectManager->currProject->infr);
+					}
 				}
 			}
-		}
 		break;
 	}
 	case sf::Event::MouseWheelScrolled:

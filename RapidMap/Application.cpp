@@ -9,6 +9,8 @@
 #include "Window.hpp"
 #include "load_data_module.hpp"
 
+#include "StateBox.hpp"
+
 #include "Workspace.hpp"
 #include "MenuStrip.hpp"
 #include "StateBlock.hpp"
@@ -142,7 +144,7 @@ void Application::initAppParams()
 {
 	Log::makeLog("app.initAppParams started...");
 
-	version = "v0.1";
+	version = RAPIDMAP_FILE_VERSION;
 
 	Log::makeLog("app.initAppParams finished");
 }
@@ -176,6 +178,9 @@ void Application::initInterfaces()
 	stateblock->projectManager = projectManager;
 
 	window->addInterface(std::move(stateblock));
+
+	//std::unique_ptr<StateBox> box = std::make_unique<StateBox>();
+	//window->addInterface(std::move(box));
 
 	std::unique_ptr<ToolStrip> toolstrip = std::make_unique<ToolStrip>();
 	toolstrip->projectManager = projectManager;

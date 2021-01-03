@@ -69,6 +69,9 @@
     <ClCompile Include="ToolStrip.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="StateBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OSM.hpp">
@@ -126,6 +129,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ToolStrip.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StateBox.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

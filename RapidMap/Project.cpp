@@ -161,6 +161,24 @@ void Railway::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	target.draw(path, states);
 }
 
+void Line::refresh(CityInfrastructure* cif)
+{
+	path = sf::VertexArray(sf::LineStrip, stationids.size());
+	int i = 0;
+	for (auto it : stationids)
+	{
+		path[i].position = cif->stopNodes[it].getPosition();
+		path[i].color = sf::Color::Blue;
+		i++;
+	}
+}
+
+void Line::draw(sf::RenderTarget & target, sf::RenderStates states) const
+{
+	target.draw(path, states);
+}
+
+
 
 Project::Project()
 {
@@ -257,6 +275,13 @@ void Project::open(const std::string& filepath)
 		Stop stop;
 		sf::Vector2f p;
 		file >> stop.osmID >> p.x >> p.y;
+		if (version == "v0.2")
+		{
+			std::string name;
+			std::getline(file, name);
+			if (name == "none") name = "";
+			stop.name = name;
+		}
 		stop.setPosition(p);
 		infr.stopNodes[stop.osmID] = stop;
 	}
@@ -289,26 +314,29 @@ void Project::open(const std::string& filepath)
 	Log::makeLog("Project opened");
 }
 
-void Project::save()
+void Project::save(bool updateVersion)
 {
-	saveProject(path);
+	saveProject(path, updateVersion);
 }
 
-void Project::saveAs(const std::string& filepath)
+void Project::saveAs(const std::string& filepath, bool updateVersion)
 {
-	saveProject(filepath);
+	saveProject(filepath, updateVersion);
 	path = filepath;
 	fileName = path.substr(path.find_last_of('\\') + 1, path.size());
 }
 
-void Project::saveCopy(const std::string& filepath)
+void Project::saveCopy(const std::string& filepath, bool updateVersion)
 {
-	saveProject(filepath);
+	saveProject(filepath, updateVersion);
 }
 
-void Project::saveProject(const std::string& filepath)
+void Project::saveProject(const std::string& filepath, bool updateVersion)
 {
 	Log::makeLog("Saving a project to " + filepath);
+
+	if (updateVersion)
+		version = RAPIDMAP_FILE_VERSION;
 
 	time_edited = Log::getCurrTimestamp();
 
@@ -352,9 +380,13 @@ void Project::saveProject(const std::string& filepath)
 	file << infr.stopNodes.size() << std::endl;
 	for (auto it : infr.stopNodes)
 	{
-		file << it.second.osmID << " " << it.second.getPosition().x << " " << it.second.getPosition().y << std::endl;
+		file << it.second.osmID << " " << it.second.getPosition().x << " " << it.second.getPosition().y;
+		if(version == "v0.2")
+		if (it.second.name == "")
+			file << "none" << std::endl;
+		else
+			file << it.second.name << std::endl;
 	}
-	
 
 	file.close();
 
@@ -637,19 +669,3 @@ void ProjectManager::attachOSMData()
 	else MessageBox(NULL, "Create a project at first", "No project opened", MB_OK);
 }
 
-void Line::refresh(CityInfrastructure* cif)
-{
-	path = sf::VertexArray(sf::LineStrip, stationids.size());
-	int i = 0;
-	for (auto it : stationids)
-	{
-		path[i].position = cif->stopNodes[it].getPosition();
-		path[i].color = sf::Color::Blue;
-		i++;
-	}
-}
-
-void Line::draw(sf::RenderTarget & target, sf::RenderStates states) const
-{
-	target.draw(path, states);
-}

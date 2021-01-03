@@ -12,6 +12,8 @@ class CityInfrastructure;
 class Project;
 class ProjectManager;
 
+#define RAPIDMAP_FILE_VERSION "v0.2"
+
 #include "OSM.hpp"
 #include "Application.hpp"
 
@@ -111,16 +113,16 @@ public:
 
 	void create(const std::string& username, const std::string& v); //init new project
 	void open(const std::string& filepath);
-	void save();
-	void saveAs(const std::string& filepath);
-	void saveCopy(const std::string& filepath);
+	void save(bool updateVersion = true);
+	void saveAs(const std::string& filepath, bool updateVersion = true);
+	void saveCopy(const std::string& filepath, bool updateVersion = true);
 	void attachData(OSM_Data data);
 
 	std::string getName();
 	std::string getFilePath();
 
 private:
-	void saveProject(const std::string& filepath);
+	void saveProject(const std::string& filepath, bool updateVersion);
 
 private:
 	std::string path;
