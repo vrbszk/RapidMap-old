@@ -47,8 +47,7 @@ private:
 
 	Window* window;
 
-	//StateMachine stateMachine;
-	AssetManager assetManager;
+	std::shared_ptr<AssetManager> assetManager;
 
 	std::shared_ptr<ProjectManager> projectManager;
 };

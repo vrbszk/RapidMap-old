@@ -1,15 +1,15 @@
 #pragma once
 
-class MenuStrip;
+class State_MenuStrip;
 
-#include "Interface.hpp"
+#include "State.hpp"
 #include "StripButton.hpp"
 #include "AssetManager.hpp"
 
-class MenuStrip : public Interface
+class State_MenuStrip : public State
 {
 public:
-	MenuStrip();
+	State_MenuStrip();
 
 	void init();
 
@@ -20,7 +20,4 @@ public:
 private:
 	StripButton button;
 	sf::RectangleShape bg;
-	
-public:
-	AssetManager* resources;
 };

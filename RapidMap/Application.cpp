@@ -9,13 +9,15 @@
 #include "Window.hpp"
 #include "load_data_module.hpp"
 
-#include "Workspace.hpp"
-#include "MenuStrip.hpp"
+#include "State_Workspace.hpp"
+#include "State_MenuStrip.hpp"
 #include "StateBlock.hpp"
-#include "ToolStrip.hpp"
+#include "State_ToolStrip.hpp"
 
 Application::Application() 
 {
+	assetManager = std::make_shared<AssetManager>();
+
 	projectManager = std::make_shared<ProjectManager>();
 	projectManager->core = this;
 
@@ -113,7 +115,7 @@ void Application::initWindow()
 
 	window = new Window(sf::VideoMode(700, 500), "RapidMap", sf::Style::Default);
 	window->core = this;
-	window->setHintFont(assetManager.GetFont("main"));
+	window->setHintFont(assetManager->GetFont("main"));
 
 	Log::makeLog("app.initWindow finished");
 }
@@ -146,41 +148,65 @@ void Application::initInterfaces()
 {
 	Log::makeLog("app.initInterfaces started...");
 
-	std::unique_ptr<Workspace> work(new Workspace());
+	std::unique_ptr<Interface> interfacer;// = std::make_unique<Interface>();
+	/*std::unique_ptr<MainMenuState> mms = std::make_unique<MainMenuState>();
+	mms->init();
+	interfacer->setState(std::move(mms));
+	window->addInterface(std::move(interfacer));*/
+
+	std::unique_ptr<State_Workspace> work = std::make_unique<State_Workspace>();
+	work->setAssetManager(assetManager);
+	work->setProjectManager(projectManager);
 	work->skeletonEnabled = true;
 	work->nodeSkeletonEnabled = true;
 	work->zoomLevel = 1;
 	work->prevMousePos = sf::Mouse::getPosition(*window);
-	work->projectManager = projectManager;
 
-	window->addInterface(std::move(work));
-	
-	std::unique_ptr<MenuStrip> strip(new MenuStrip());
-	strip->resources = &assetManager;
-	strip->projectManager = projectManager;
-	strip->init();
+	work->init();
 
-	window->addInterface(std::move(strip));
+	interfacer = std::make_unique<Interface>();
+	interfacer->setState(std::move(work));
 
-	std::unique_ptr<StateBlock> stateblock = std::make_unique<StateBlock>();
-
-	StatePtr menuState = std::make_unique<MainMenuState>();
-	stateblock->stateList.AddState(std::move(menuState));
-	stateblock->projectManager = projectManager;
-
-	//window->addInterface(std::move(stateblock));
-
-	std::unique_ptr<Interface> interfacer = std::make_unique<Interface>();
-	std::unique_ptr<MainMenuState> mms = std::make_unique<MainMenuState>();
-	mms->init();
-	interfacer->setState(std::move(mms));
 	window->addInterface(std::move(interfacer));
 
-	std::unique_ptr<ToolStrip> toolstrip = std::make_unique<ToolStrip>();
-	toolstrip->projectManager = projectManager;
+
+	
+	std::unique_ptr<State_MenuStrip> strip = std::make_unique<State_MenuStrip>();
+	strip->setAssetManager(assetManager);
+	strip->setProjectManager(projectManager);
+
+	strip->init();
+
+	interfacer = std::make_unique<Interface>();
+	interfacer->setState(std::move(strip));
+
+	window->addInterface(std::move(interfacer));
+
+
+
+	std::unique_ptr<MainMenuState> mms = std::make_unique<MainMenuState>();
+	mms->setAssetManager(assetManager);
+	mms->setProjectManager(projectManager);
+
+	mms->init();
+
+	interfacer = std::make_unique<Interface>();
+	interfacer->setState(std::move(mms));
+
+	window->addInterface(std::move(interfacer));
+
+
+
+	std::unique_ptr<State_ToolStrip> toolstrip = std::make_unique<State_ToolStrip>();
+	toolstrip->setAssetManager(assetManager);
+	toolstrip->setProjectManager(projectManager);
+
 	toolstrip->init();
 
-	window->addInterface(std::move(toolstrip));
+	interfacer = std::make_unique<Interface>();
+	interfacer->setState(std::move(toolstrip));
+
+	window->addInterface(std::move(interfacer));
 
 	Log::makeLog("app.initInterfaces finished");
 }
@@ -191,7 +217,7 @@ void Application::initResources()
 {
 	Log::makeLog("app.initResources started...");
 
-	assetManager.LoadFont("main", "Fonts/geomid.ttf");
+	assetManager->LoadFont("main", "Fonts/geomid.ttf");
 
 	Log::makeLog("app.initResources finished");
 }

@@ -128,16 +128,16 @@
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenuState.cpp" />
-    <ClCompile Include="MenuStrip.cpp" />
+    <ClCompile Include="State_MenuStrip.cpp" />
     <ClCompile Include="OSM.cpp" />
     <ClCompile Include="Project.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="StateBlock.cpp" />
     <ClCompile Include="StateMachine.cpp" />
     <ClCompile Include="StripButton.cpp" />
-    <ClCompile Include="ToolStrip.cpp" />
+    <ClCompile Include="State_ToolStrip.cpp" />
     <ClCompile Include="Window.cpp" />
-    <ClCompile Include="Workspace.cpp" />
+    <ClCompile Include="State_Workspace.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.hpp" />
@@ -149,16 +149,16 @@
     <ClInclude Include="load_data_module.hpp" />
     <ClInclude Include="Log.hpp" />
     <ClInclude Include="MainMenuState.hpp" />
-    <ClInclude Include="MenuStrip.hpp" />
+    <ClInclude Include="State_MenuStrip.hpp" />
     <ClInclude Include="OSM.hpp" />
     <ClInclude Include="Project.hpp" />
     <ClInclude Include="State.hpp" />
     <ClInclude Include="StateBlock.hpp" />
     <ClInclude Include="StateMachine.hpp" />
     <ClInclude Include="StripButton.hpp" />
-    <ClInclude Include="ToolStrip.hpp" />
+    <ClInclude Include="State_ToolStrip.hpp" />
     <ClInclude Include="Window.hpp" />
-    <ClInclude Include="Workspace.hpp" />
+    <ClInclude Include="State_Workspace.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

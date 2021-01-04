@@ -1,11 +1,11 @@
-#include "ToolStrip.hpp"
+#include "State_ToolStrip.hpp"
 
-ToolStrip::ToolStrip() : selectButton(sf::Vector2f(50, 50)), addStationButton(sf::Vector2f(50, 50))
+State_ToolStrip::State_ToolStrip() : selectButton(sf::Vector2f(50, 50)), addStationButton(sf::Vector2f(50, 50))
 {
 
 }
 
-void ToolStrip::init()
+void State_ToolStrip::init()
 {
 	selectButton.setPosition(0, 0);
 	addStationButton.setPosition(50, 0);
@@ -13,7 +13,7 @@ void ToolStrip::init()
 	//selectButton.setActiveColor(sf::Color(96, 24, 72));
 }
 
-void ToolStrip::processEvents(sf::Event e)
+void State_ToolStrip::processEvents(sf::Event e)
 {
 	sf::View tempView = window->getView();
 	window->setView(view);
@@ -23,7 +23,7 @@ void ToolStrip::processEvents(sf::Event e)
 		sf::Vector2f viewMousePos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
 		if (selectButton.getCollideBox().contains(viewMousePos))
 		{
-			selectButton.pressed = true;//!selectButton.pressed;
+			selectButton.pressed = true;
 			addStationButton.pressed = false;
 			projectManager->tool = ProjectManager::ToolList::SelectTool;
 		}
@@ -45,18 +45,18 @@ void ToolStrip::processEvents(sf::Event e)
 	window->setView(tempView);
 }
 
-void ToolStrip::update()
+void State_ToolStrip::update()
 {
 	sf::View tempView = window->getView();
 	window->setView(view);
 	sf::Vector2f viewMousePos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
 	window->setView(tempView);
 
-	selectButton.update(viewMousePos);//sf::Vector2f(sf::Mouse::getPosition(*window)));
+	selectButton.update(viewMousePos);
 	addStationButton.update(viewMousePos);
 }
 
-void ToolStrip::render()
+void State_ToolStrip::render()
 {
 	if (!window)
 		return;
@@ -64,12 +64,12 @@ void ToolStrip::render()
 	sf::View tempView = window->getView();
 	window->setView(view);
 
-	sf::RectangleShape bound(sf::Vector2f(view.getSize().x - 10, view.getSize().y - 10));
-	bound.setOutlineThickness(5);
-	bound.setOutlineColor(sf::Color::Red);
-	bound.setFillColor(sf::Color::Transparent);
-	bound.setPosition(5, 5);
-	window->draw(bound);
+	//sf::RectangleShape bound(sf::Vector2f(view.getSize().x - 10, view.getSize().y - 10));
+	//bound.setOutlineThickness(5);
+	//bound.setOutlineColor(sf::Color::Red);
+	//bound.setFillColor(sf::Color::Transparent);
+	//bound.setPosition(5, 5);
+	//window->draw(bound);
 
 	window->draw(selectButton);
 	window->draw(addStationButton);

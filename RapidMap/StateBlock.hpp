@@ -2,7 +2,7 @@
 
 class StateBlock;
 
-#include "Interface.hpp"
+#include "State.hpp"
 #include "StateMachine.hpp"
 
 class StateBlock : public State

@@ -1,11 +1,16 @@
-#include "Workspace.hpp"
+#include "State_Workspace.hpp"
 
-Workspace::Workspace()
+State_Workspace::State_Workspace()
 {
 
 }
 
-void Workspace::processEvents(sf::Event e)
+void State_Workspace::init()
+{
+
+}
+
+void State_Workspace::processEvents(sf::Event e)
 {
 	sf::View tempView = window->getView();
 	window->setView(view);
@@ -89,7 +94,7 @@ void Workspace::processEvents(sf::Event e)
 	window->setView(tempView);
 }
 
-void Workspace::update()
+void State_Workspace::update()
 {
 	workspaceView = view;
 	workspaceView.setSize(workspaceView.getSize().x * zoomLevel, workspaceView.getSize().y * zoomLevel);
@@ -144,7 +149,7 @@ void Workspace::update()
 	window->setView(tempView);
 }
 
-void Workspace::render()
+void State_Workspace::render()
 {
 	if (!window)
 		return;
@@ -160,12 +165,12 @@ void Workspace::render()
 	bound.setPosition(viewCenter);
 	window->draw(bound);*/
 
-	sf::RectangleShape bound(sf::Vector2f(view.getSize().x - 10, view.getSize().y - 10));
-	bound.setOutlineThickness(5);
-	bound.setOutlineColor(sf::Color::Yellow);
-	bound.setFillColor(sf::Color::Transparent);
-	bound.setPosition(5, 5);
-	window->draw(bound);
+	//sf::RectangleShape bound(sf::Vector2f(view.getSize().x - 10, view.getSize().y - 10));
+	//bound.setOutlineThickness(5);
+	//bound.setOutlineColor(sf::Color::Yellow);
+	//bound.setFillColor(sf::Color::Transparent);
+	//bound.setPosition(5, 5);
+	//window->draw(bound);
 
 	window->setView(workspaceView);
 

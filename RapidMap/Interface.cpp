@@ -16,6 +16,9 @@ Window* Interface::getWindow()
 void Interface::setView(sf::View v)
 {
 	view = v;
+	
+	if (state)
+		state->setView(view);
 }
 
 void Interface::createView(sf::FloatRect space)
@@ -25,6 +28,9 @@ void Interface::createView(sf::FloatRect space)
 	if (window)
 		view.setViewport(sf::FloatRect(space.left / window->getSize().x, space.top / window->getSize().y,
 			space.width / window->getSize().x, space.height / window->getSize().y));
+
+	if (state)
+		state->setView(view);
 }
 
 sf::View Interface::getView()
@@ -37,7 +43,12 @@ void Interface::setState(StatePtr s)
 	state = std::move(s);
 	
 	if (state)
+	{
+		state->setHolder(this);
 		state->setWindow(window);
+		state->setView(view);
+	}
+
 }
 
 StatePtr& Interface::getState()

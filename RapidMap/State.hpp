@@ -17,11 +17,20 @@ public:
 	virtual void render() = 0;
 
 	void setWindow(Window* win);
+	void setView(sf::View v);
 
 	void setHolder(Interface* iptr);
 
+	void setAssetManager(std::shared_ptr<AssetManager>& ptr);
+	void setProjectManager(std::shared_ptr<ProjectManager>& ptr);
+
 protected:
+	std::shared_ptr<AssetManager> assetManager;
+	std::shared_ptr<ProjectManager> projectManager;
+
 	std::vector<EntityPtr> entityHolder;
+
 	Window* window;
+	sf::View view;
 	Interface* holder;
 };

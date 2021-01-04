@@ -1,15 +1,16 @@
 #pragma once
 
-class Workspace;
+class State_Workspace;
 
 #include "Interface.hpp"
 #include "Project.hpp"
 
-class Workspace : public Interface
+class State_Workspace : public State
 {
 public:
-	Workspace();
+	State_Workspace();
 
+	void init();
 	void processEvents(sf::Event e);
 	void update();
 	void render();
