@@ -6,6 +6,7 @@ class MainMenuState;
 
 class MainMenuState : public State
 {
+public:
 	void init();
 	void processEvents(sf::Event event);
 	void updateState();

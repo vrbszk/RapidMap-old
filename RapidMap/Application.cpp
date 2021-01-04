@@ -171,6 +171,9 @@ void Application::initInterfaces()
 	//window->addInterface(std::move(stateblock));
 
 	std::unique_ptr<Interface> interfacer = std::make_unique<Interface>();
+	std::unique_ptr<MainMenuState> mms = std::make_unique<MainMenuState>();
+	mms->init();
+	interfacer->setState(std::move(mms));
 	window->addInterface(std::move(interfacer));
 
 	std::unique_ptr<ToolStrip> toolstrip = std::make_unique<ToolStrip>();

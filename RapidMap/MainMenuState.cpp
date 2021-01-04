@@ -5,6 +5,7 @@
 
 
 
+
 #include <iostream>
 
 void MainMenuState::init()
@@ -13,7 +14,6 @@ void MainMenuState::init()
 	button->setActiveColor(sf::Color::Yellow);
 	button->setPassiveColor(sf::Color::Magenta);
 	entityHolder.push_back(std::move(button));
-	std::cout << "MainMenuState inited" << std::endl;
 }
 
 void MainMenuState::processEvents(sf::Event event)
@@ -23,9 +23,10 @@ void MainMenuState::processEvents(sf::Event event)
 
 void MainMenuState::updateState()
 {
+	sf::Vector2f viewMousePos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
 	for (auto it = entityHolder.begin(); it != entityHolder.end(); it++)
 	{
-		it->get()->update(sf::Vector2f(sf::Mouse::getPosition(*window)));
+		it->get()->update(viewMousePos);
 	}
 }
 

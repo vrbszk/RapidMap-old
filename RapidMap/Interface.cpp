@@ -3,6 +3,9 @@
 void Interface::setWindow(Window* win)
 {
 	window = win;
+
+	if (state)
+		state->setWindow(window);
 }
 
 Window* Interface::getWindow()
@@ -29,14 +32,39 @@ sf::View Interface::getView()
 	return view;
 }
 
+void Interface::setState(StatePtr s)
+{
+	state = std::move(s);
+	
+	if (state)
+		state->setWindow(window);
+}
+
+StatePtr& Interface::getState()
+{
+	return state;
+}
+
 void Interface::processEvents(sf::Event e)
 {
+	sf::View tempView = window->getView();
+	window->setView(view);
 
+	if (state)
+		state->processEvents(e);
+
+	window->setView(tempView);
 }
 
 void Interface::update()
 {
-	
+	sf::View tempView = window->getView();
+	window->setView(view);
+
+	if (state)
+		state->updateState();
+
+	window->setView(tempView);
 }
 
 void Interface::render()
@@ -59,6 +87,9 @@ void Interface::render()
 		bound.setPosition(5, 5);
 		window->draw(bound);
 	}
+
+	if (state)
+		state->render();
 
 	window->setView(tempView);
 }

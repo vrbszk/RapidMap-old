@@ -7,11 +7,11 @@ class Interface;
 typedef std::unique_ptr<Interface> InterfacePtr;
 
 #include "Project.hpp"
+#include "State.hpp"
 
 class Interface
 {
 public:
-	//sf::View view;
 	std::shared_ptr<ProjectManager> projectManager;
 
 	void setWindow(Window* win);
@@ -20,6 +20,9 @@ public:
 	void setView(sf::View v);
 	void createView(sf::FloatRect space);
 	sf::View getView();
+
+	void setState(StatePtr s);
+	StatePtr& getState();
 
 	virtual void processEvents(sf::Event e);
 	virtual void update();
@@ -30,4 +33,5 @@ public:
 protected:
 	Window* window;
 	sf::View view;
+	StatePtr state;
 };

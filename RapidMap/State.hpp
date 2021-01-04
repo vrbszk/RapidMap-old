@@ -18,7 +18,10 @@ public:
 
 	void setWindow(Window* win);
 
+	void setHolder(Interface* iptr);
+
 protected:
 	std::vector<EntityPtr> entityHolder;
 	Window* window;
+	Interface* holder;
 };
