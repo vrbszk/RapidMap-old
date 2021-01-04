@@ -11,16 +11,23 @@ typedef std::unique_ptr<Interface> InterfacePtr;
 class Interface
 {
 public:
-	sf::View view;
+	//sf::View view;
 	std::shared_ptr<ProjectManager> projectManager;
 
 	void setWindow(Window* win);
 	Window* getWindow();
 
-	virtual void updateEvents(sf::Event e) = 0;
-	virtual void updateInterface(sf::FloatRect space) = 0;
-	virtual void render() = 0;
+	void setView(sf::View v);
+	void createView(sf::FloatRect space);
+	sf::View getView();
+
+	virtual void processEvents(sf::Event e);
+	virtual void update();
+	virtual void render();
+
+	bool f_drawBorder = true;
 
 protected:
 	Window* window;
+	sf::View view;
 };

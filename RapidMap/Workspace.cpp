@@ -5,16 +5,16 @@ Workspace::Workspace()
 
 }
 
-void Workspace::updateEvents(sf::Event event)
+void Workspace::processEvents(sf::Event e)
 {
 	sf::View tempView = window->getView();
 	window->setView(view);
 
-	switch (event.type)
+	switch (e.type)
 	{
 	case sf::Event::KeyPressed:
 	{
-		switch (event.key.code)
+		switch (e.key.code)
 		{
 		case sf::Keyboard::E:
 			skeletonEnabled = !skeletonEnabled;
@@ -24,19 +24,19 @@ void Workspace::updateEvents(sf::Event event)
 			viewCenter = sf::Vector2f(0, 0);
 			break;
 		case sf::Keyboard::N:
-			if (event.key.control) projectManager->createProject();
+			if (e.key.control) projectManager->createProject();
 			else nodeSkeletonEnabled = !nodeSkeletonEnabled;
 			break;
 		case sf::Keyboard::O:
-			if (event.key.control) projectManager->openProject();
+			if (e.key.control) projectManager->openProject();
 			break;
 		case sf::Keyboard::S:
-			if (event.key.control && !event.key.alt) projectManager->saveProject();
-			else if (event.key.control && event.key.alt) projectManager->saveProjectAs();
-			else if (!event.key.control && event.key.alt) projectManager->saveProjectCopy();
+			if (e.key.control && !e.key.alt) projectManager->saveProject();
+			else if (e.key.control && e.key.alt) projectManager->saveProjectAs();
+			else if (!e.key.control && e.key.alt) projectManager->saveProjectCopy();
 			break;
 		case sf::Keyboard::T:
-			if (event.key.control) projectManager->attachOSMData();
+			if (e.key.control) projectManager->attachOSMData();
 			break;
 		}
 		break;
@@ -45,11 +45,11 @@ void Workspace::updateEvents(sf::Event event)
 	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
-			viewCenter.x = viewCenter.x + (prevMousePos.x - event.mouseMove.x) * zoomLevel;
-			viewCenter.y = viewCenter.y + (prevMousePos.y - event.mouseMove.y) * zoomLevel;
+			viewCenter.x = viewCenter.x + (prevMousePos.x - e.mouseMove.x) * zoomLevel;
+			viewCenter.y = viewCenter.y + (prevMousePos.y - e.mouseMove.y) * zoomLevel;
 		}
-		prevMousePos.x = event.mouseMove.x;
-		prevMousePos.y = event.mouseMove.y;
+		prevMousePos.x = e.mouseMove.x;
+		prevMousePos.y = e.mouseMove.y;
 		break;
 	}
 	case sf::Event::MouseButtonPressed:
@@ -72,11 +72,11 @@ void Workspace::updateEvents(sf::Event event)
 	}
 	case sf::Event::MouseWheelScrolled:
 	{
-		if (event.mouseWheelScroll.delta < 0)
+		if (e.mouseWheelScroll.delta < 0)
 		{
 			zoomLevel *= 2;
 		}
-		else if (event.mouseWheelScroll.delta > 0)
+		else if (e.mouseWheelScroll.delta > 0)
 		{
 			zoomLevel /= 2;
 		}
@@ -87,17 +87,19 @@ void Workspace::updateEvents(sf::Event event)
 	window->setView(tempView);
 }
 
-void Workspace::updateInterface(sf::FloatRect space)
+void Workspace::update()
 {
-	view.setSize(space.width * zoomLevel, space.height * zoomLevel);
-	view.setCenter(viewCenter);
-	view.setViewport(sf::FloatRect(space.left / window->getSize().x, space.top / window->getSize().y,
-		space.width / window->getSize().x, space.height / window->getSize().y)); // space в даному випадку має остаточні розміри, а значить не потрібно прив'язуватися до викривленого view
+	workspaceView = view;
+	workspaceView.setSize(workspaceView.getSize().x * zoomLevel, workspaceView.getSize().y * zoomLevel);
+	workspaceView.setCenter(viewCenter);
+	//workspaceView.setViewport(sf::FloatRect(space.left / window->getSize().x, space.top / window->getSize().y,
+		//space.width / window->getSize().x, space.height / window->getSize().y)); // space в даному випадку має остаточні розміри, а значить не потрібно прив'язуватися до викривленого view
 
 	window->setHintText("");
 
 	sf::View tempView = window->getView();
-	window->setView(view);
+	window->setView(workspaceView);
+	//window->setView(view);
 
 	if (projectManager->currProject)
 	{
@@ -148,13 +150,22 @@ void Workspace::render()
 	sf::View tempView = window->getView();
 	window->setView(view);
 
-	sf::RectangleShape bound(sf::Vector2f(view.getSize().x - 10 * zoomLevel, view.getSize().y - 10 * zoomLevel));
+	/*sf::RectangleShape bound(sf::Vector2f(view.getSize().x - 10 * zoomLevel, view.getSize().y - 10 * zoomLevel));
 	bound.setOutlineThickness(5 * zoomLevel);
 	bound.setOutlineColor(sf::Color::Yellow);
 	bound.setFillColor(sf::Color::Transparent);
 	bound.setOrigin(bound.getSize().x / 2, bound.getSize().y / 2);
 	bound.setPosition(viewCenter);
+	window->draw(bound);*/
+
+	sf::RectangleShape bound(sf::Vector2f(view.getSize().x - 10, view.getSize().y - 10));
+	bound.setOutlineThickness(5);
+	bound.setOutlineColor(sf::Color::Yellow);
+	bound.setFillColor(sf::Color::Transparent);
+	bound.setPosition(5, 5);
 	window->draw(bound);
+
+	window->setView(workspaceView);
 
 
 	if (projectManager->currProject)

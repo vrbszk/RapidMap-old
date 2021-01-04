@@ -9,8 +9,6 @@
 #include "Window.hpp"
 #include "load_data_module.hpp"
 
-#include "StateBox.hpp"
-
 #include "Workspace.hpp"
 #include "MenuStrip.hpp"
 #include "StateBlock.hpp"
@@ -35,10 +33,7 @@ Application::~Application()
 	Log::makeLog("App destroyed");
 }
 
-void x()
-{
-	
-}
+
 
 //CORE
 void Application::run()
@@ -57,7 +52,6 @@ void Application::run()
 
 	while (isRunning)
 	{
-		//stateMachine.ProcessStateChanges();
 		update();
 		render();
 	}
@@ -121,9 +115,6 @@ void Application::initWindow()
 	window->core = this;
 	window->setHintFont(assetManager.GetFont("main"));
 
-	//StatePtr menuState(new MainMenuState());
-	//stateMachine.AddState(std::move(menuState));
-
 	Log::makeLog("app.initWindow finished");
 }
 
@@ -171,16 +162,16 @@ void Application::initInterfaces()
 
 	window->addInterface(std::move(strip));
 
-	std::unique_ptr<StateBlock> stateblock = std::make_unique<StateBlock>();//(new StateBlock());
+	std::unique_ptr<StateBlock> stateblock = std::make_unique<StateBlock>();
 
 	StatePtr menuState = std::make_unique<MainMenuState>();
 	stateblock->stateList.AddState(std::move(menuState));
 	stateblock->projectManager = projectManager;
 
-	window->addInterface(std::move(stateblock));
+	//window->addInterface(std::move(stateblock));
 
-	//std::unique_ptr<StateBox> box = std::make_unique<StateBox>();
-	//window->addInterface(std::move(box));
+	std::unique_ptr<Interface> interfacer = std::make_unique<Interface>();
+	window->addInterface(std::move(interfacer));
 
 	std::unique_ptr<ToolStrip> toolstrip = std::make_unique<ToolStrip>();
 	toolstrip->projectManager = projectManager;

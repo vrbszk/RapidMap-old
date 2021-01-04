@@ -10,8 +10,8 @@ class Workspace : public Interface
 public:
 	Workspace();
 
-	void updateEvents(sf::Event e);
-	void updateInterface(sf::FloatRect space);
+	void processEvents(sf::Event e);
+	void update();
 	void render();
 
 public:
@@ -24,5 +24,5 @@ public:
 	sf::Vector2f viewCenter;
 	sf::Vector2i prevMousePos;
 private:
-	
+	sf::View workspaceView;
 };

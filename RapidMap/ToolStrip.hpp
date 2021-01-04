@@ -10,8 +10,8 @@ class ToolStrip : public Interface
 public:
 	ToolStrip();
 
-	void updateEvents(sf::Event e);
-	void updateInterface(sf::FloatRect space);
+	void processEvents(sf::Event e);
+	void update();
 	void render();
 
 	void init();

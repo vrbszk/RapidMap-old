@@ -131,8 +131,8 @@
     <ClCompile Include="MenuStrip.cpp" />
     <ClCompile Include="OSM.cpp" />
     <ClCompile Include="Project.cpp" />
+    <ClCompile Include="State.cpp" />
     <ClCompile Include="StateBlock.cpp" />
-    <ClCompile Include="StateBox.cpp" />
     <ClCompile Include="StateMachine.cpp" />
     <ClCompile Include="StripButton.cpp" />
     <ClCompile Include="ToolStrip.cpp" />
@@ -154,7 +154,6 @@
     <ClInclude Include="Project.hpp" />
     <ClInclude Include="State.hpp" />
     <ClInclude Include="StateBlock.hpp" />
-    <ClInclude Include="StateBox.hpp" />
     <ClInclude Include="StateMachine.hpp" />
     <ClInclude Include="StripButton.hpp" />
     <ClInclude Include="ToolStrip.hpp" />

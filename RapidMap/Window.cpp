@@ -50,7 +50,7 @@ void Window::updateEvents()
 
 		for (auto it = interfaces.begin(); it != interfaces.end(); it++)
 		{
-			(*it)->updateEvents(event);
+			(*it)->processEvents(event);
 		}
 	}
 }
@@ -62,26 +62,35 @@ void Window::updateWindow()
 	sf::FloatRect stripSpace(sf::Vector2f(spaceLeft.left, spaceLeft.top), sf::Vector2f(spaceLeft.width, 20));
 
 	//menuStrip.updateInterface(stripSpace);
-	interfaces[1]->updateInterface(stripSpace);
+	interfaces[1]->createView(stripSpace);
+	interfaces[1]->update();
+	//interfaces[1]->updateInterface(stripSpace);
 
-	spaceLeft.top = interfaces[1]->view.getSize().y;
-	spaceLeft.height = spaceLeft.height - interfaces[1]->view.getSize().y;
+	spaceLeft.top = interfaces[1]->getView().getSize().y;
+	spaceLeft.height = spaceLeft.height - interfaces[1]->getView().getSize().y;
 
 	sf::FloatRect toolstripSpace(sf::Vector2f(spaceLeft.left, spaceLeft.top), sf::Vector2f(spaceLeft.width, 50));
 
-	interfaces[3]->updateInterface(toolstripSpace);
+	interfaces[3]->createView(toolstripSpace);
+	interfaces[3]->update();
+	//interfaces[3]->updateInterface(toolstripSpace);
 
-	spaceLeft.top = interfaces[3]->view.getSize().y + spaceLeft.top;
-	spaceLeft.height = spaceLeft.height - interfaces[3]->view.getSize().y;
+
+	spaceLeft.top = interfaces[3]->getView().getSize().y + spaceLeft.top;
+	spaceLeft.height = spaceLeft.height - interfaces[3]->getView().getSize().y;
 
 	sf::FloatRect stateSpace(sf::Vector2f(spaceLeft.left + spaceLeft.width - 200, spaceLeft.top), sf::Vector2f(200, spaceLeft.height));
 
 	//stateBlock.updateInterface(stateSpace);
-	interfaces[2]->updateInterface(stateSpace);
+	interfaces[2]->createView(stateSpace);
+	interfaces[2]->update();
+	//interfaces[2]->updateInterface(stateSpace);
 
-	spaceLeft.width = spaceLeft.width - interfaces[2]->view.getSize().x;
+	spaceLeft.width = spaceLeft.width - interfaces[2]->getView().getSize().x;
 
-	interfaces[0]->updateInterface(spaceLeft);
+	interfaces[0]->createView(spaceLeft);
+	interfaces[0]->update();
+	//interfaces[0]->updateInterface(spaceLeft);
 }
 
 void Window::render()

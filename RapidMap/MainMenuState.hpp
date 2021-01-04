@@ -6,10 +6,10 @@ class MainMenuState;
 
 class MainMenuState : public State
 {
-	void Init();
-	void updateEvents(sf::Event event);
-	void updateState(sf::RenderWindow* win);
-	void render(sf::RenderWindow* win);
+	void init();
+	void processEvents(sf::Event event);
+	void updateState();
+	void render();
 
 	void Pause();
 	void Resume();

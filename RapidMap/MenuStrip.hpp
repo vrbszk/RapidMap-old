@@ -13,8 +13,8 @@ public:
 
 	void init();
 
-	void updateEvents(sf::Event e);
-	void updateInterface(sf::FloatRect space);
+	void processEvents(sf::Event e);
+	void update();
 	void render();
 
 private:

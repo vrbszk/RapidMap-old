@@ -6,20 +6,19 @@ class State;
 typedef std::unique_ptr<State> StatePtr;
 
 #include "Entity.hpp"
+#include "Window.hpp"
 
 class State
 {
 public:
-	virtual void Init() = 0;
-	virtual void updateEvents(sf::Event event) = 0;
-	virtual void updateState(sf::RenderWindow* win) = 0;
-	virtual void render(sf::RenderWindow* win) = 0;
+	virtual void init() = 0;
+	virtual void processEvents(sf::Event event) = 0;
+	virtual void updateState() = 0;
+	virtual void render() = 0;
 
-	virtual void Pause() = 0;
-	virtual void Resume() = 0;
+	void setWindow(Window* win);
 
-	//void setRenderWindow(sf::RenderWindow* win);
 protected:
 	std::vector<EntityPtr> entityHolder;
-	//sf::RenderWindow* window;
+	Window* window;
 };

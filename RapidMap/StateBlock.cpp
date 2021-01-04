@@ -1,22 +1,17 @@
 #include "StateBlock.hpp"
 
-void StateBlock::updateEvents(sf::Event e)
+void StateBlock::processEvents(sf::Event e)
 {
 	//if (!stateList.IsEmpty())
 	//	stateList.GetActiveState()->updateEvents(e);
 }
 
-void StateBlock::updateInterface(sf::FloatRect space)
+void StateBlock::update()
 {
 	stateList.ProcessStateChanges();
 
 	//if (!stateList.IsEmpty())
 	//	stateList.GetActiveState()->updateState(window);
-
-	view.setSize(space.width, space.height);
-	view.setCenter(view.getSize().x / 2, view.getSize().y / 2);
-	view.setViewport(sf::FloatRect(space.left / window->getSize().x, space.top / window->getSize().y,
-		space.width / window->getSize().x, space.height / window->getSize().y));
 }
 
 void StateBlock::render()

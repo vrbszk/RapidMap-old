@@ -13,7 +13,7 @@ void ToolStrip::init()
 	//selectButton.setActiveColor(sf::Color(96, 24, 72));
 }
 
-void ToolStrip::updateEvents(sf::Event e)
+void ToolStrip::processEvents(sf::Event e)
 {
 	sf::View tempView = window->getView();
 	window->setView(view);
@@ -45,13 +45,8 @@ void ToolStrip::updateEvents(sf::Event e)
 	window->setView(tempView);
 }
 
-void ToolStrip::updateInterface(sf::FloatRect space)
+void ToolStrip::update()
 {
-	view.setSize(space.width, space.height);
-	view.setCenter(view.getSize().x / 2, view.getSize().y / 2);
-	view.setViewport(sf::FloatRect(space.left / window->getSize().x, space.top / window->getSize().y,
-		space.width / window->getSize().x, space.height / window->getSize().y));
-
 	sf::View tempView = window->getView();
 	window->setView(view);
 	sf::Vector2f viewMousePos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));

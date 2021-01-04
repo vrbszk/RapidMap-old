@@ -31,7 +31,7 @@ void StateMachine::ProcessStateChanges()
 
 		if (!this->states.empty())
 		{
-			this->states.top()->Resume();
+			//this->states.top()->Resume();
 		}
 
 		this->isRemoving = false;
@@ -47,12 +47,12 @@ void StateMachine::ProcessStateChanges()
 			}
 			else
 			{
-				this->states.top()->Pause();
+				//this->states.top()->Pause();
 			}
 		}
 
 		this->states.push(std::move(this->newState));
-		this->states.top()->Init();
+		this->states.top()->init();
 		this->isAdding = false;
 	}
 }

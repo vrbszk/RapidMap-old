@@ -21,22 +21,16 @@ void MenuStrip::init()
 	bg.setFillColor(sf::Color(192, 72, 72));
 }
 
-void MenuStrip::updateEvents(sf::Event e)
+void MenuStrip::processEvents(sf::Event e)
 {
 
 }
 
-void MenuStrip::updateInterface(sf::FloatRect space)
+void MenuStrip::update()
 {
-	view.setSize(space.width, space.height);
-	view.setCenter(view.getSize().x / 2, view.getSize().y / 2);
-	view.setViewport(sf::FloatRect(space.left / window->getSize().x, space.top / window->getSize().y,
-		space.width / window->getSize().x, space.height / window->getSize().y));
-
 	button.update(sf::Vector2f(sf::Mouse::getPosition(*window)));
 
 	bg.setSize(view.getSize());
-	
 }
 
 void MenuStrip::render()

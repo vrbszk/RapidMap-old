@@ -8,8 +8,8 @@ class StateBlock;
 class StateBlock : public Interface
 {
 public:
-	void updateEvents(sf::Event e);
-	void updateInterface(sf::FloatRect space);
+	void processEvents(sf::Event e);
+	void update();
 	void render();
 
 public:
