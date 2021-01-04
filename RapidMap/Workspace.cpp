@@ -10,6 +10,8 @@ void Workspace::processEvents(sf::Event e)
 	sf::View tempView = window->getView();
 	window->setView(view);
 
+	window->setView(workspaceView);
+
 	switch (e.type)
 	{
 	case sf::Event::KeyPressed:
@@ -98,8 +100,10 @@ void Workspace::update()
 	window->setHintText("");
 
 	sf::View tempView = window->getView();
+
+	window->setView(view);
+
 	window->setView(workspaceView);
-	//window->setView(view);
 
 	if (projectManager->currProject)
 	{
@@ -110,11 +114,9 @@ void Workspace::update()
 			for (auto it = projectManager->currProject->infr.stopNodes.begin();
 				it != projectManager->currProject->infr.stopNodes.end(); it++)
 			{
-				//std::cout << it->second.getCollideBox().left << " " << it->second.getCollideBox().top << std::endl;
 				if (it->second.getCollideBox().contains(viewMousePos))
 				{
 					it->second.setFillColor(sf::Color::Red);
-					//std::cout << it->second.name << std::endl;
 					window->setHintText("id: " + sf::String(it->first) + "\nname:" + sf::String::fromUtf8(it->second.name.begin(), it->second.name.end()));
 				}
 				else
