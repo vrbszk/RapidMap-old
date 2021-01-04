@@ -9,7 +9,7 @@ class MainMenuState : public State
 public:
 	void init();
 	void processEvents(sf::Event event);
-	void updateState();
+	void update();
 	void render();
 
 	void Pause();

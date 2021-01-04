@@ -5,13 +5,16 @@ class StateBlock;
 #include "Interface.hpp"
 #include "StateMachine.hpp"
 
-class StateBlock : public Interface
+class StateBlock : public State
 {
 public:
-	void processEvents(sf::Event e);
+	void init();
+	void processEvents(sf::Event event);
 	void update();
 	void render();
 
 public:
 	StateMachine stateList;
+
+	std::shared_ptr<ProjectManager> projectManager;
 };

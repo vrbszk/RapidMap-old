@@ -21,7 +21,7 @@ void MainMenuState::processEvents(sf::Event event)
 	
 }
 
-void MainMenuState::updateState()
+void MainMenuState::update()
 {
 	sf::Vector2f viewMousePos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
 	for (auto it = entityHolder.begin(); it != entityHolder.end(); it++)

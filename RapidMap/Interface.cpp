@@ -62,7 +62,7 @@ void Interface::update()
 	window->setView(view);
 
 	if (state)
-		state->updateState();
+		state->update();
 
 	window->setView(tempView);
 }
