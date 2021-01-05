@@ -11,7 +11,6 @@
 
 #include "State_Workspace.hpp"
 #include "State_MenuStrip.hpp"
-#include "StateBlock.hpp"
 #include "State_ToolStrip.hpp"
 
 Application::Application() 
