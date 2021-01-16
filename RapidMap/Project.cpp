@@ -338,6 +338,10 @@ void Project::open(const std::string& filepath)
 	saved = true;
 
 	Log::makeLog("Project opened");
+
+	Line line;
+	line.name = "temp";
+	this->schemedata.lines.push_back(line);
 }
 
 void Project::save(bool updateVersion)
@@ -406,7 +410,7 @@ void Project::saveProject(const std::string& filepath, bool updateVersion)
 	file << infr.stopNodes.size() << std::endl;
 	for (auto it : infr.stopNodes)
 	{
-		file << it.second.osmID << " " << it.second.getPosition().x << " " << it.second.getPosition().y;
+		file << it.second.osmID << " " << it.second.getPosition().x << " " << it.second.getPosition().y << " ";
 //		if(version == "v0.2")
 		if (it.second.name == "")
 			file << "none" << std::endl;
@@ -417,12 +421,12 @@ void Project::saveProject(const std::string& filepath, bool updateVersion)
 	file << schemedata.lines.size() << std::endl;
 	for (auto it : schemedata.lines)
 	{
-		if (it.second.name == "")
+		if (it.name == "")
 			file << "none" << std::endl;
 		else
-			file << it.second.name << std::endl;
-		file << it.second.stationids.size() << std::endl;
-		for (auto st : it.second.stationids)
+			file << it.name << std::endl;
+		file << it.stationids.size() << std::endl;
+		for (auto st : it.stationids)
 		{
 			file << st << " ";
 		}

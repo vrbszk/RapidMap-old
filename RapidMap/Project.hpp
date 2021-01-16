@@ -109,7 +109,7 @@ public:
 class SchemeData
 {
 public:
-	std::map<std::string, Line> lines;
+	std::vector<Line> lines;
 };
 
 
