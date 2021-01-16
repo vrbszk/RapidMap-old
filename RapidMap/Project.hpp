@@ -99,8 +99,17 @@ public:
 
 	sf::VertexArray path;
 
+	std::string name;
+
 	//std::string osmID;
 	std::vector<std::string> stationids;
+};
+
+
+class SchemeData
+{
+public:
+	std::map<std::string, Line> lines;
 };
 
 
@@ -138,6 +147,8 @@ private:
 	std::string time_edited;
 public:
 	CityInfrastructure infr;
+
+	SchemeData schemedata;
 
 	Line line;
 };

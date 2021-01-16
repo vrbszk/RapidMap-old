@@ -99,8 +99,6 @@ void State_Workspace::update()
 	workspaceView = view;
 	workspaceView.setSize(workspaceView.getSize().x * zoomLevel, workspaceView.getSize().y * zoomLevel);
 	workspaceView.setCenter(viewCenter);
-	//workspaceView.setViewport(sf::FloatRect(space.left / window->getSize().x, space.top / window->getSize().y,
-		//space.width / window->getSize().x, space.height / window->getSize().y)); // space в даному випадку має остаточні розміри, а значить не потрібно прив'язуватися до викривленого view
 
 	window->setHintText("");
 
@@ -157,20 +155,7 @@ void State_Workspace::render()
 	sf::View tempView = window->getView();
 	window->setView(view);
 
-	/*sf::RectangleShape bound(sf::Vector2f(view.getSize().x - 10 * zoomLevel, view.getSize().y - 10 * zoomLevel));
-	bound.setOutlineThickness(5 * zoomLevel);
-	bound.setOutlineColor(sf::Color::Yellow);
-	bound.setFillColor(sf::Color::Transparent);
-	bound.setOrigin(bound.getSize().x / 2, bound.getSize().y / 2);
-	bound.setPosition(viewCenter);
-	window->draw(bound);*/
 
-	//sf::RectangleShape bound(sf::Vector2f(view.getSize().x - 10, view.getSize().y - 10));
-	//bound.setOutlineThickness(5);
-	//bound.setOutlineColor(sf::Color::Yellow);
-	//bound.setFillColor(sf::Color::Transparent);
-	//bound.setPosition(5, 5);
-	//window->draw(bound);
 
 	window->setView(workspaceView);
 

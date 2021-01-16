@@ -286,6 +286,33 @@ void Project::open(const std::string& filepath)
 		infr.stopNodes[stop.osmID] = stop;
 	}
 
+	if (file.eof())
+		goto FINISH;
+
+	int linecount;
+	file >> linecount;
+	for (int i = 0; i < linecount; i++)
+	{
+		Line line;
+		std::string name;
+		std::getline(file, name);
+		if (name == "none") name = "";
+		line.name = name;
+
+		int stopscount;
+		file >> stopscount;
+		for (int j = 0; j < stopscount; j++)
+		{
+			std::string stopid;
+			file >> stopid;
+			line.stationids.push_back(stopid);
+		}
+	}
+
+	FINISH:
+
+	file.close();
+
 
 	for (auto it = infr.streetWays.begin(); it != infr.streetWays.end(); it++)
 	{
@@ -307,7 +334,6 @@ void Project::open(const std::string& filepath)
 		}
 	}
 
-	file.close();
 
 	saved = true;
 
@@ -335,7 +361,7 @@ void Project::saveProject(const std::string& filepath, bool updateVersion)
 {
 	Log::makeLog("Saving a project to " + filepath);
 
-	if (updateVersion)
+	//if (updateVersion)
 		version = RAPIDMAP_FILE_VERSION;
 
 	time_edited = Log::getCurrTimestamp();
@@ -381,11 +407,26 @@ void Project::saveProject(const std::string& filepath, bool updateVersion)
 	for (auto it : infr.stopNodes)
 	{
 		file << it.second.osmID << " " << it.second.getPosition().x << " " << it.second.getPosition().y;
-		if(version == "v0.2")
+//		if(version == "v0.2")
 		if (it.second.name == "")
 			file << "none" << std::endl;
 		else
 			file << it.second.name << std::endl;
+	}
+
+	file << schemedata.lines.size() << std::endl;
+	for (auto it : schemedata.lines)
+	{
+		if (it.second.name == "")
+			file << "none" << std::endl;
+		else
+			file << it.second.name << std::endl;
+		file << it.second.stationids.size() << std::endl;
+		for (auto st : it.second.stationids)
+		{
+			file << st << " ";
+		}
+		file << std::endl;
 	}
 
 	file.close();
