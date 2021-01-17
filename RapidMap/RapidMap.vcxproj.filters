@@ -66,7 +66,10 @@
     <ClCompile Include="State_Workspace.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="State_LineViewer.cpp">
+    <ClCompile Include="State_LineManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="State_LinesViewer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -122,7 +125,10 @@
     <ClInclude Include="State_Workspace.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="State_LineViewer.hpp">
+    <ClInclude Include="State_LinesViewer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="State_LineManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

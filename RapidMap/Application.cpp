@@ -12,7 +12,7 @@
 #include "State_Workspace.hpp"
 #include "State_MenuStrip.hpp"
 #include "State_ToolStrip.hpp"
-#include "State_LineViewer.hpp"
+#include "State_LinesViewer.hpp"
 
 Application::Application() 
 {
@@ -195,7 +195,7 @@ void Application::initInterfaces()
 
 	window->addInterface(std::move(interfacer));*/
 
-	std::unique_ptr<State_LineViewer> viewer = std::make_unique<State_LineViewer>();
+	std::unique_ptr<State_LinesViewer> viewer = std::make_unique<State_LinesViewer>();
 	viewer->setAssetManager(assetManager);
 	viewer->setProjectManager(projectManager);
 

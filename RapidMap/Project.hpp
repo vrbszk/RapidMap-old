@@ -9,6 +9,9 @@ class Street;
 class Railway;
 class CityInfrastructure;
 
+class Line;
+class SchemeData;
+
 class Project;
 class ProjectManager;
 
