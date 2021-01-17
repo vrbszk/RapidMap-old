@@ -12,6 +12,7 @@
 #include "State_Workspace.hpp"
 #include "State_MenuStrip.hpp"
 #include "State_ToolStrip.hpp"
+#include "State_LineViewer.hpp"
 
 Application::Application() 
 {
@@ -183,7 +184,7 @@ void Application::initInterfaces()
 
 
 
-	std::unique_ptr<MainMenuState> mms = std::make_unique<MainMenuState>();
+	/*std::unique_ptr<MainMenuState> mms = std::make_unique<MainMenuState>();
 	mms->setAssetManager(assetManager);
 	mms->setProjectManager(projectManager);
 
@@ -191,6 +192,17 @@ void Application::initInterfaces()
 
 	interfacer = std::make_unique<Interface>();
 	interfacer->setState(std::move(mms));
+
+	window->addInterface(std::move(interfacer));*/
+
+	std::unique_ptr<State_LineViewer> viewer = std::make_unique<State_LineViewer>();
+	viewer->setAssetManager(assetManager);
+	viewer->setProjectManager(projectManager);
+
+	viewer->init();
+
+	interfacer = std::make_unique<Interface>();
+	interfacer->setState(std::move(viewer));
 
 	window->addInterface(std::move(interfacer));
 

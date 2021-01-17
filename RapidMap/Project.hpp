@@ -101,6 +101,8 @@ public:
 
 	std::string name;
 
+	std::string index_reserved = "0";
+
 	//std::string osmID;
 	std::vector<std::string> stationids;
 };

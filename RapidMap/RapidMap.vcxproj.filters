@@ -66,6 +66,9 @@
     <ClCompile Include="State_Workspace.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="State_LineViewer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OSM.hpp">
@@ -117,6 +120,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="State_Workspace.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="State_LineViewer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

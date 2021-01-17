@@ -291,11 +291,15 @@ void Project::open(const std::string& filepath)
 
 	int linecount;
 	file >> linecount;
+	//std::string l;
+	//std::getline(file, l);
 	for (int i = 0; i < linecount; i++)
 	{
 		Line line;
 		std::string name;
+		file >> line.index_reserved;
 		std::getline(file, name);
+		name = name.substr(1);
 		if (name == "none") name = "";
 		line.name = name;
 
@@ -307,6 +311,7 @@ void Project::open(const std::string& filepath)
 			file >> stopid;
 			line.stationids.push_back(stopid);
 		}
+		schemedata.lines.push_back(line);
 	}
 
 	FINISH:
@@ -338,10 +343,6 @@ void Project::open(const std::string& filepath)
 	saved = true;
 
 	Log::makeLog("Project opened");
-
-	Line line;
-	line.name = "temp";
-	this->schemedata.lines.push_back(line);
 }
 
 void Project::save(bool updateVersion)
@@ -421,6 +422,7 @@ void Project::saveProject(const std::string& filepath, bool updateVersion)
 	file << schemedata.lines.size() << std::endl;
 	for (auto it : schemedata.lines)
 	{
+		file << it.index_reserved << " ";
 		if (it.name == "")
 			file << "none" << std::endl;
 		else

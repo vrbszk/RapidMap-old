@@ -128,6 +128,7 @@
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenuState.cpp" />
+    <ClCompile Include="State_LineViewer.cpp" />
     <ClCompile Include="State_MenuStrip.cpp" />
     <ClCompile Include="OSM.cpp" />
     <ClCompile Include="Project.cpp" />
@@ -147,6 +148,7 @@
     <ClInclude Include="load_data_module.hpp" />
     <ClInclude Include="Log.hpp" />
     <ClInclude Include="MainMenuState.hpp" />
+    <ClInclude Include="State_LineViewer.hpp" />
     <ClInclude Include="State_MenuStrip.hpp" />
     <ClInclude Include="OSM.hpp" />
     <ClInclude Include="Project.hpp" />
