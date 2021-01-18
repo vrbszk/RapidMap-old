@@ -1,18 +1,6 @@
 #include "State_LinesViewer.hpp"
 
-#include "MainMenuState.hpp"
-
-//void TextPanel::draw(sf::RenderTarget& target, sf::RenderStates states) const
-//{
-//
-//}
-//
-//
-//
-//void TextPanel::update(sf::Vector2f mousePos)
-//{
-//
-//}
+#include "State_LineManager.hpp"
 
 
 
@@ -36,9 +24,14 @@ void State_LinesViewer::processEvents(sf::Event event)
 		{
 			if (textPanels[i].getGlobalBounds().contains(viewMousePos))
 			{
-				std::unique_ptr<MainMenuState> state = std::make_unique<MainMenuState>();
+				std::unique_ptr<State_LineManager> state = std::make_unique<State_LineManager>();
 				state->setAssetManager(assetManager);
 				state->setProjectManager(projectManager);
+
+				if (projectManager->currProject)
+				{
+					state->setLine(&projectManager->currProject->schemedata.lines[i]);
+				}
 
 				state->init();
 
@@ -80,32 +73,16 @@ void State_LinesViewer::update()
 
 void State_LinesViewer::render()
 {
-	//if (!projectManager->currProject)
-	//	return;
-
-
-	//sf::String str;
-	//if (projectManager->currProject->schemedata.lines.size() == 0)
-	//	str = "--- no lines ---";
-	//else for (auto it : projectManager->currProject->schemedata.lines)
-	//{
-	//	str += it.name + "\n";
-	//}
-
-	//sf::Text text(str, assetManager->GetFont("main"), 10);
-	//text.setFillColor(sf::Color::Black);
-	//text.setPosition(10, 10);
 
 	sf::View tempView = window->getView();
 	window->setView(view);
-
-	//window->draw(text);
 
 	for (auto it : textPanels)
 		window->draw(it);
 
 	window->setView(tempView);
 }
+
 
 
 void State_LinesViewer::refreshPanels()
@@ -122,6 +99,4 @@ void State_LinesViewer::refreshPanels()
 		text.setPosition(10, 15 * textPanels.size() + 10);
 		textPanels.push_back(text);
 	}
-
-
 }

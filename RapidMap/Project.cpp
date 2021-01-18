@@ -279,6 +279,8 @@ void Project::open(const std::string& filepath)
 		{
 			std::string name;
 			std::getline(file, name);
+			int t = name.find_first_not_of(' ');
+			name = name.substr(t);
 			if (name == "none") name = "";
 			stop.name = name;
 		}
@@ -364,6 +366,19 @@ void Project::saveCopy(const std::string& filepath, bool updateVersion)
 
 void Project::saveProject(const std::string& filepath, bool updateVersion)
 {
+	if (line.stationids.size() > 0)
+	{
+		line.name = Log::getCurrTimestamp();
+		schemedata.lines.push_back(line);
+	}
+
+
+
+
+
+
+
+
 	Log::makeLog("Saving a project to " + filepath);
 
 	//if (updateVersion)
